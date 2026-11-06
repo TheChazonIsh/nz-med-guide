@@ -1,0 +1,18 @@
+{
+  "name": "NZ Pharmacy MedGuide (뉴질랜드 일반의약품 가이드)",
+  "short_name": "NZ MedGuide",
+  "description": "뉴질랜드 약국(Chemist Warehouse, Unichem) 일반의약품 성분 기전, 증상별 맞춤 제품 추천 및 병용 시너지/금기 판별 웹앱",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#134e4a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
