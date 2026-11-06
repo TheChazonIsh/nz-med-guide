@@ -4,177 +4,199 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NZ Pharmacy MedGuide — 뉴질랜드 약국 일반의약품 성분·증상·병용 가이드</title>
-  <meta name="theme-color" content="#134e4a" />
+  <meta name="theme-color" content="#0f766e" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="NZ MedGuide" />
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" type="image/svg+xml" href="icon.svg" />
   <link rel="apple-touch-icon" href="icon.svg" />
-
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Pretendard", "Malgun Gothic", sans-serif; }
-    body { background-color: #f8fafc; color: #0f172a; }
+    body { background-color: #f8fafc; color: #0f172a; line-height: 1.6; }
     .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
     .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
     .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
     .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-    .symptom-chip { transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1); }
+    .symptom-chip { transition: all 0.16s cubic-bezier(0.4, 0, 0.2, 1); }
     .symptom-chip:hover { transform: translateY(-1px); }
     .card-hover { transition: all 0.2s ease; }
-    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04); }
+    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 12px 28px -6px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04); }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
     .animate-fade-in { animation: fadeIn 0.22s ease-out forwards; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-  <!-- Top Header -->
-  <header class="bg-gradient-to-r from-teal-900 via-emerald-800 to-teal-900 text-white shadow-lg sticky top-0 z-30">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+  <!-- Clean, Uncluttered Top Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-emerald-400/20 border border-emerald-300/40 flex items-center justify-center shadow-inner">
-            <svg class="w-6 h-6 text-emerald-300" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-            </svg>
+          <div class="w-10 h-10 rounded-2xl bg-teal-700 text-white flex items-center justify-center shadow-sm font-black text-xl">
+            +
           </div>
           <div>
             <div class="flex items-center gap-2">
-              <h1 class="text-lg sm:text-xl font-extrabold tracking-tight">NZ Pharmacy MedGuide</h1>
-              <span class="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-400/20 text-emerald-200 border border-emerald-400/30">Chemist Warehouse · Unichem</span>
+              <h1 class="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">NZ Pharmacy MedGuide</h1>
+              <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-teal-50 text-teal-800 border border-teal-200">v2.0 자연어 문장 진단</span>
             </div>
-            <p class="text-xs text-emerald-100/85">뉴질랜드 일반의약품(OTC) 성분 기전 · 증상별 맞춤 제품 · 시너지/병용 금기 판별 시스템</p>
+            <p class="text-xs text-slate-500">뉴질랜드 약국(Chemist Warehouse · Unichem) 성분 기전 · 맞춤 제품 · 병용 판별</p>
           </div>
         </div>
-        <button id="openAddModalBtnMobile" class="md:hidden px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs shadow">
+        <button id="openAddModalBtnMobile" class="md:hidden px-3 py-1.5 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs shadow-xs">
           + 약 추가
         </button>
       </div>
 
       <!-- Navigation Tabs -->
       <nav class="flex items-center gap-1.5 overflow-x-auto custom-scroll pb-1 md:pb-0" aria-label="주요 메뉴">
-        <button data-tab="symptom" class="nav-tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-1.5 bg-white text-teal-900 shadow-sm">
+        <button data-tab="symptom" class="nav-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center gap-1.5 bg-teal-700 text-white shadow-xs">
           <span>🩺</span><span>증상별 맞춤 검색</span>
         </button>
-        <button data-tab="ingredients" class="nav-tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-1.5 text-emerald-100 hover:bg-white/10">
+        <button data-tab="ingredients" class="nav-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center gap-1.5 text-slate-600 hover:bg-slate-100">
           <span>🧬</span><span>성분 백과 & 기전</span>
         </button>
-        <button data-tab="checker" class="nav-tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-1.5 text-emerald-100 hover:bg-white/10">
+        <button data-tab="checker" class="nav-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center gap-1.5 text-slate-600 hover:bg-slate-100">
           <span>⚖️</span><span>병용 시너지/금기 체커</span>
-          <span id="checkerCountBadge" class="ml-0.5 px-1.5 py-0.2 rounded-full text-[11px] bg-amber-400 text-slate-950 font-bold">2</span>
+          <span id="checkerCountBadge" class="ml-0.5 px-1.5 py-0.2 rounded-full text-[11px] bg-amber-400 text-slate-950 font-extrabold">2</span>
         </button>
-        <button data-tab="products" class="nav-tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-1.5 text-emerald-100 hover:bg-white/10">
+        <button data-tab="products" class="nav-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center gap-1.5 text-slate-600 hover:bg-slate-100">
           <span>💊</span><span>NZ 약국 제품 & 내 약장</span>
-          <span id="cabinetCountBadge" class="ml-0.5 px-1.5 py-0.2 rounded-full text-[11px] bg-emerald-400 text-slate-950 font-bold">0</span>
+          <span id="cabinetCountBadge" class="ml-0.5 px-1.5 py-0.2 rounded-full text-[11px] bg-emerald-100 text-emerald-900 font-extrabold">0</span>
         </button>
-        <button id="openAddModalBtn" class="hidden md:flex items-center gap-1 px-3 py-2 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-bold text-xs whitespace-nowrap transition shadow-sm ml-1">
+        <button id="openAddModalBtn" class="hidden md:flex items-center gap-1 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs whitespace-nowrap transition shadow-xs ml-1">
           <span>＋</span><span>나만의 약 등록</span>
         </button>
       </nav>
     </div>
   </header>
 
-  <!-- NZ Pharmacy Classification Banner -->
-  <div class="bg-slate-900 text-slate-200 border-b border-slate-800 text-xs">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex flex-wrap items-center justify-between gap-2">
-      <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
-        <span class="font-semibold text-emerald-400">🇳🇿 뉴질랜드 약국 구매 등급 안내:</span>
-        <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-400"></span><strong>General Sale:</strong> 마트/약국 진열대 자유 구매</span>
-        <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-sky-400"></span><strong>Pharmacy Only:</strong> 약국 진열대/카운터 구매</span>
-        <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-400"></span><strong>Pharmacist Only (Restricted):</strong> 처방전 없이 약사와 짧은 상담 후 구매</span>
-      </div>
-      <div class="text-slate-400 text-[11px]">
-        ※ 본 가이드는 뉴질랜드 Medsafe 및 약국 복약지도 기준 정보이며, 기저질환·임산부·영유아는 현지 약사(Pharmacist)와 상담하세요.
-      </div>
-    </div>
-  </div>
-
   <!-- Main Content Container -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6">
 
-    <!-- ==================== TAB 1: SYMPTOM CHECKER ==================== -->
+    <!-- ==================== TAB 1: SYMPTOM & NATURAL SENTENCE CHECKER ==================== -->
     <section id="tab-symptom" class="tab-panel space-y-6 animate-fade-in">
-      <!-- Search & Quick Symptom Picker -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-5 sm:p-6">
-        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-5 border-b border-slate-100">
+
+      <!-- Hero Natural Language Search Box -->
+      <div class="bg-white rounded-3xl shadow-sm border border-slate-200/90 p-5 sm:p-7 space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full border border-teal-200">
-              STEP 1 · 어디가 어떻게 불편하신가요?
+            <span class="inline-flex items-center gap-1.5 text-xs font-extrabold text-teal-800 bg-teal-50 px-3 py-1 rounded-full border border-teal-200">
+              ✨ 일상 문장 & 증상 자동 파악 엔진
             </span>
-            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">증상 검색으로 맞춤 성분·기전·뉴질랜드 약국 제품 찾기</h2>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">어디가 어떻게 불편하신가요? 편하게 문장으로 적어보세요</h2>
             <p class="text-sm text-slate-600 mt-1">
-              현재 겪고 있는 증상을 <strong>여러 개 클릭</strong>하거나 검색창에 입력하세요 (예: <span class="text-teal-700 font-medium">"목이 붓고 열나요"</span>, <span class="text-teal-700 font-medium">"코막힘 두통"</span>, <span class="text-teal-700 font-medium">"속쓰림 신물"</span>). 선택한 모든 증상을 동시에 해결할 수 있는 <strong>단일 성분과 시너지 병용 조합</strong>을 분석합니다.
+              약사에게 말하듯 증상을 문장으로 적어주시면 문맥 속에서 <strong>원인 증상과 주의 신호</strong>를 자동으로 파악해 가장 알맞은 성분과 뉴질랜드 약국 제품을 추천합니다.
             </p>
           </div>
-          <div class="flex items-center gap-2 self-start lg:self-center">
-            <button id="clearSymptomsBtn" class="px-3.5 py-2 rounded-xl border border-slate-200 hover:bg-slate-100 text-xs font-semibold text-slate-600 transition">
+          <div class="flex items-center gap-2 self-start sm:self-center shrink-0">
+            <button id="clearSymptomsBtn" class="px-3.5 py-2 rounded-xl border border-slate-200 hover:bg-slate-100 text-xs font-bold text-slate-600 transition">
               초기화
             </button>
-            <button id="sendSelectedToCheckerBtn" class="px-4 py-2 rounded-xl bg-teal-700 hover:bg-teal-800 text-white text-xs font-semibold shadow-sm transition">
+            <button id="sendSelectedToCheckerBtn" class="px-4 py-2 rounded-xl bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold shadow-xs transition">
               추천 성분을 병용 체커로 보내기 →
             </button>
           </div>
         </div>
 
-        <!-- Search Input + Scenario Presets -->
-        <div class="mt-5 grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
-          <div class="lg:col-span-7 relative">
-            <input
-              id="symptomSearchInput"
-              type="text"
-              placeholder="증상, 질환, 성분명, 또는 약 이름 검색 (예: 편두통, 몸살, 인후통, 가래, 비염, 설사, 방광염, Panadol, Maxigesic...)"
-              class="w-full pl-11 pr-10 py-3 rounded-xl border border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-500/20 text-sm outline-none transition"
-            />
-            <svg class="w-5 h-5 text-slate-400 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z" />
-            </svg>
-            <button id="clearSymptomInputBtn" title="검색어 지우기" class="hidden absolute right-3 top-3 text-slate-400 hover:text-slate-600 text-sm px-1.5 py-0.5">✕</button>
-          </div>
-          <div class="lg:col-span-5 flex flex-wrap items-center gap-1.5">
-            <span class="text-xs font-semibold text-slate-500 mr-1">자주 찾는 상황 원클릭:</span>
-            <button data-preset="fever,bodyache,sorethroat" class="preset-btn px-2.5 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 text-xs font-medium transition">🤒 심한 몸살+인후통</button>
-            <button data-preset="headache,blockednose,chesty" class="preset-btn px-2.5 py-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-900 border border-sky-200 text-xs font-medium transition">🤧 코막힘+가래+두통</button>
-            <button data-preset="sneezing,itchyeyes,blockednose" class="preset-btn px-2.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 text-xs font-medium transition">🌿 NZ 봄철 꽃가루 비염</button>
-            <button data-preset="heartburn,indigestion" class="preset-btn px-2.5 py-1.5 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-900 border border-purple-200 text-xs font-medium transition">🔥 역류성 식도염·속쓰림</button>
-            <button data-preset="diarrhoea,cramps" class="preset-btn px-2.5 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-900 border border-rose-200 text-xs font-medium transition">⚡ 배앓이 경련+급성설사</button>
+        <!-- Big Conversational Search Bar -->
+        <div class="relative">
+          <input
+            id="symptomSearchInput"
+            type="text"
+            placeholder="예: 코 안이 헌 거 같아서 약간의 피가 나고 딱지가 매일 아침 생깁니다 / 침 삼킬 때 목이 붓고 열이 나요"
+            class="w-full pl-12 pr-28 py-4 rounded-2xl border-2 border-teal-600/40 focus:border-teal-700 focus:ring-4 focus:ring-teal-500/15 text-sm sm:text-base font-medium text-slate-900 placeholder:text-slate-400 outline-none transition shadow-xs"
+          />
+          <svg class="w-6 h-6 text-teal-700 absolute left-4 top-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z" />
+          </svg>
+          <div class="absolute right-2.5 top-2.5 flex items-center gap-1.5">
+            <button id="clearSymptomInputBtn" title="검색어 지우기" class="hidden px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold">지우기 ✕</button>
+            <button id="analyzeSentenceBtn" class="px-3.5 py-2 rounded-xl bg-teal-700 hover:bg-teal-800 text-white text-xs sm:text-sm font-bold shadow-xs transition">
+              증상 분석
+            </button>
           </div>
         </div>
 
-        <!-- Body Area Filter + Interactive Symptom Tags -->
-        <div class="mt-5">
+        <!-- Real-life Natural Sentence Examples (One-click test) -->
+        <div class="space-y-2">
+          <div class="text-xs font-bold text-slate-500 flex items-center gap-1.5">
+            <span>💬</span><span>이렇게 문장으로 적어보세요 (클릭하면 바로 분석됩니다):</span>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button data-sentence="코 안이 헌 거 같아서 약간의 피가 나고 딱지가 매일 아침 생깁니다" class="sentence-example-btn text-left px-3 py-1.5 rounded-xl bg-teal-50/80 hover:bg-teal-100 text-teal-950 border border-teal-200/90 text-xs font-semibold transition">
+              "코 안이 헌 거 같아서 약간의 피가 나고 딱지가 매일 아침 생깁니다"
+            </button>
+            <button data-sentence="침 삼킬 때마다 목이 찢어질 듯이 붓고 따가운데 으슬으슬 열도 나요" class="sentence-example-btn text-left px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 text-xs font-semibold transition">
+              "침 삼킬 때마다 목이 붓고 따가운데 으슬으슬 열도 나요"
+            </button>
+            <button data-sentence="자려고 누우면 가슴에서 뜨거운 신물이 올라오고 속이 타는 것처럼 쓰려요" class="sentence-example-btn text-left px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 text-xs font-semibold transition">
+              "누우면 가슴에서 신물이 올라오고 속이 타는 것처럼 쓰려요"
+            </button>
+            <button data-sentence="배가 쥐어짜듯이 비틀리고 아픈데 물설사까지 계속 나와서 기운이 없어요" class="sentence-example-btn text-left px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 text-xs font-semibold transition">
+              "배가 쥐어짜듯이 아프고 물설사가 계속 나와서 기운이 없어요"
+            </button>
+            <button data-sentence="봄바람 불고 나서 재채기랑 맑은 콧물이 멈추질 않고 눈까지 너무 가려운데 안 졸린 약 있나요" class="sentence-example-btn text-left px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 text-xs font-semibold transition">
+              "재채기랑 맑은 콧물이 나고 눈이 가려운데 안 졸린 약 있나요"
+            </button>
+            <button data-sentence="소변 볼 때마다 끝이 찌릿찌릿하고 타는 듯이 아파서 화장실을 자꾸 가게 돼요" class="sentence-example-btn text-left px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 text-xs font-semibold transition">
+              "소변 볼 때마다 끝이 찌릿하고 타는 듯이 아파요"
+            </button>
+          </div>
+        </div>
+
+        <!-- Natural Sentence Live Diagnosis Banner (Shown when user types a sentence) -->
+        <div id="nlpAnalysisResultBox" class="hidden rounded-2xl bg-gradient-to-r from-teal-900 to-emerald-900 text-white p-4 sm:p-5 shadow-sm border border-teal-700 animate-fade-in">
+          <!-- Populated dynamically by JS -->
+        </div>
+
+        <!-- Collapsible / Clean Symptom Tag Selector -->
+        <div class="pt-3 border-t border-slate-100">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <span class="text-xs font-bold text-slate-700">📌 또는 신체 부위별 증상 태그를 직접 선택/추가하세요:</span>
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span class="text-[11px] font-semibold text-slate-400">빠른 조합:</span>
+              <button data-preset="fever,bodyache,sorethroat" class="preset-btn px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 text-xs font-semibold transition">🤒 심한 몸살+인후통</button>
+              <button data-preset="headache,blockednose,chesty" class="preset-btn px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-900 border border-sky-200 text-xs font-semibold transition">🤧 코막힘+가래+두통</button>
+              <button data-preset="sneezing,itchyeyes,blockednose" class="preset-btn px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 text-xs font-semibold transition">🌿 NZ 봄철 꽃가루 비염</button>
+              <button data-preset="heartburn,indigestion" class="preset-btn px-2.5 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-900 border border-purple-200 text-xs font-semibold transition">🔥 역류성 식도염·속쓰림</button>
+              <button data-preset="diarrhoea,cramps" class="preset-btn px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-900 border border-rose-200 text-xs font-semibold transition">⚡ 배앓이 경련+급성설사</button>
+            </div>
+          </div>
+
           <div class="flex items-center gap-1.5 overflow-x-auto custom-scroll pb-2" id="bodyCategoryBar">
             <!-- Populated by JS -->
           </div>
-          <div id="symptomChipsContainer" class="mt-3 flex flex-wrap gap-2">
+          <div id="symptomChipsContainer" class="mt-2.5 flex flex-wrap gap-2">
             <!-- Populated by JS -->
           </div>
         </div>
       </div>
 
-      <!-- Dynamic Combination Regimen Banner (When 1+ symptoms selected) -->
-      <div id="synergyRegimenBox" class="bg-gradient-to-br from-teal-900 via-slate-900 to-emerald-950 text-white rounded-2xl shadow-md p-5 sm:p-6 border border-teal-700/50">
+      <!-- Concise Combination Regimen Summary Card -->
+      <div id="synergyRegimenBox" class="bg-white rounded-3xl shadow-xs border-2 border-teal-600/30 p-5 sm:p-6">
         <!-- Populated by JS -->
       </div>
 
       <!-- Matched Active Ingredients & Products List -->
       <div class="space-y-4">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 px-1">
           <div>
-            <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+            <h3 class="text-lg sm:text-xl font-extrabold text-slate-900 flex items-center gap-2">
               <span>🎯</span>
-              <span id="symptomResultTitle">선택 증상 맞춤 추천 성분 및 뉴질랜드 판매 제품</span>
+              <span id="symptomResultTitle">맞춤 추천 성분 및 뉴질랜드 약국 제품</span>
             </h3>
-            <p id="symptomResultSubtitle" class="text-xs text-slate-500">각 카드에서 작용 기전(왜 효과가 나는지), 시너지 병용 성분, 병용 금기 성분과 실제 약국 제품 사진을 확인하세요.</p>
+            <p id="symptomResultSubtitle" class="text-xs text-slate-500 mt-0.5">핵심 역할과 추천 제품을 먼저 확인하고, 상세 약리 기전이 궁금하면 '자세한 작용 기전 및 복용법 펼치기'를 눌러보세요.</p>
           </div>
           <div class="flex items-center gap-2">
-            <label for="otcClassFilter" class="text-xs font-semibold text-slate-600">구매 등급 필터:</label>
-            <select id="otcClassFilter" class="text-xs rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 font-medium text-slate-700 outline-none focus:border-teal-600">
-              <option value="all">전체 등급 (General + 약국 + 약사상담)</option>
+            <label for="otcClassFilter" class="text-xs font-bold text-slate-600">구매 등급:</label>
+            <select id="otcClassFilter" class="text-xs rounded-xl border border-slate-300 bg-white px-3 py-2 font-semibold text-slate-700 outline-none focus:border-teal-600">
+              <option value="all">전체 등급 (마트 + 약국 + 약사상담)</option>
               <option value="General Sale">마트/약국 자유 구매 (General Sale)</option>
               <option value="Pharmacy Only">약국 전용 (Pharmacy Only)</option>
               <option value="Pharmacist Only">약사 상담 구매 (Pharmacist Only)</option>
@@ -182,7 +204,7 @@
           </div>
         </div>
 
-        <div id="symptomResultsContainer" class="space-y-5">
+        <div id="symptomResultsContainer" class="space-y-6">
           <!-- Populated by JS -->
         </div>
       </div>
@@ -190,13 +212,13 @@
 
     <!-- ==================== TAB 2: INGREDIENTS ENCYCLOPEDIA ==================== -->
     <section id="tab-ingredients" class="tab-panel hidden space-y-6 animate-fade-in">
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-5 sm:p-6">
+      <div class="bg-white rounded-3xl shadow-xs border border-slate-200 p-5 sm:p-6">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-              PHARMACOLOGY & MECHANISM DATABASE
+            <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-teal-800 bg-teal-50 px-2.5 py-1 rounded-full border border-teal-200">
+              ACTIVE INGREDIENTS & MECHANISM
             </span>
-            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">뉴질랜드 약국 핵심 성분 백과사전 (18대 핵심 성분군·복합제)</h2>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">뉴질랜드 약국 핵심 성분 백과사전 (19대 주요 성분군)</h2>
             <p class="text-sm text-slate-600 mt-1">
               약 브랜드 이름이 달라도 <strong>성분(Active Ingredient)</strong>을 알면 중복 복용을 피하고 다른 기전의 성분을 조합해 최대 효과를 볼 수 있습니다.
             </p>
@@ -205,14 +227,14 @@
             <input
               id="ingredientSearchInput"
               type="text"
-              placeholder="성분명, 약리기전, 계열 검색 (예: Paracetamol, COX, H1, 항히스타민...)"
-              class="w-full sm:w-72 px-3.5 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm outline-none focus:border-teal-600"
+              placeholder="성분명, 약리기전, 계열 검색 (예: Paracetamol, 세서미오일, COX...)"
+              class="w-full sm:w-72 px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm outline-none focus:border-teal-600"
             />
-            <select id="ingredientCategorySelect" class="px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm font-medium text-slate-700 outline-none focus:border-teal-600">
-              <option value="all">모든 약효군 보기</option>
+            <select id="ingredientCategorySelect" class="px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm font-semibold text-slate-700 outline-none focus:border-teal-600">
+              <option value="all">모든 약효군 보기 (19)</option>
               <option value="pain">진통·해열·소염 (Pain & Fever)</option>
               <option value="throat">인후통·구내염 (Throat & Mouth)</option>
-              <option value="cold">코막힘·감기 복합 (Nasal & Cold)</option>
+              <option value="cold">코막힘·코점막보습·감기 (Nasal & Cold)</option>
               <option value="cough">기침·가래 (Cough & Mucus)</option>
               <option value="allergy">알레르기·비염·안약 (Allergy & Eyes)</option>
               <option value="gastro">위장·역류·설사·변비·복통 (Digestive)</option>
@@ -223,24 +245,24 @@
       </div>
 
       <!-- Mechanism Comparison Table -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
+      <div class="bg-white rounded-3xl shadow-xs border border-slate-200 overflow-hidden">
         <div class="px-5 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
           <div>
-            <h3 class="text-sm sm:text-base font-bold text-slate-900">📊 핵심 기전별 성분 한눈에 비교하기</h3>
-            <p class="text-xs text-slate-500">행을 클릭하면 하단 상세 카드 및 해당 성분이 들어간 뉴질랜드 제품 사진으로 이동합니다.</p>
+            <h3 class="text-sm sm:text-base font-extrabold text-slate-900">📊 핵심 기전별 성분 한눈에 비교하기</h3>
+            <p class="text-xs text-slate-500">행을 클릭하면 아래 상세 설명 카드로 스크롤됩니다.</p>
           </div>
-          <span id="ingredientCountLabel" class="text-xs font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full border border-teal-200">18개 성분군</span>
+          <span id="ingredientCountLabel" class="text-xs font-bold text-teal-800 bg-teal-50 px-3 py-1 rounded-full border border-teal-200">19개 성분군</span>
         </div>
         <div class="overflow-x-auto custom-scroll max-h-96">
           <table class="w-full text-left border-collapse text-xs sm:text-sm">
             <thead class="bg-slate-100/90 text-slate-700 sticky top-0 z-10 border-b border-slate-200">
               <tr>
-                <th class="py-3 px-4 font-bold">성분명 (Active Ingredient)</th>
-                <th class="py-3 px-4 font-bold">약효 분류 / 작용 타겟</th>
-                <th class="py-3 px-4 font-bold">핵심 작용 기전 (어떻게 작용하는가?)</th>
-                <th class="py-3 px-4 font-bold">같이 쓰면 좋은 성분 (다른 기전 시너지)</th>
-                <th class="py-3 px-4 font-bold">같이 쓰면 안 되는 성분 (병용 금기/주의)</th>
-                <th class="py-3 px-4 font-bold text-center">체커 담기</th>
+                <th class="py-3.5 px-4 font-bold">성분명 (Active Ingredient)</th>
+                <th class="py-3.5 px-4 font-bold">약효 분류</th>
+                <th class="py-3.5 px-4 font-bold">핵심 작용 요약</th>
+                <th class="py-3.5 px-4 font-bold">같이 쓰면 좋은 성분 (시너지)</th>
+                <th class="py-3.5 px-4 font-bold">피해야 할 성분 (금기/주의)</th>
+                <th class="py-3.5 px-4 font-bold text-center">체커 담기</th>
               </tr>
             </thead>
             <tbody id="ingredientTableBody" class="divide-y divide-slate-100">
@@ -258,7 +280,7 @@
 
     <!-- ==================== TAB 3: COMBINATION & INTERACTION CHECKER ==================== -->
     <section id="tab-checker" class="tab-panel hidden space-y-6 animate-fade-in">
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-5 sm:p-6">
+      <div class="bg-white rounded-3xl shadow-xs border border-slate-200 p-5 sm:p-6">
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-5 border-b border-slate-100">
           <div>
             <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-800 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
@@ -270,57 +292,52 @@
             </p>
           </div>
           <div class="flex flex-wrap items-center gap-2">
-            <span class="text-xs font-semibold text-slate-500">대표 조합 테스트:</span>
-            <button data-combo="paracetamol,ibuprofen" class="combo-preset-btn px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-semibold transition">
+            <span class="text-xs font-bold text-slate-500">대표 조합 원클릭 테스트:</span>
+            <button data-combo="paracetamol,ibuprofen" class="combo-preset-btn px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-bold transition">
               ✅ Panadol + Nurofen (시너지)
             </button>
-            <button data-combo="cetirizine,fluticasone_nasal" class="combo-preset-btn px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-semibold transition">
+            <button data-combo="cetirizine,fluticasone_nasal" class="combo-preset-btn px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-bold transition">
               ✅ Zyrtec + Flixonase (비염 시너지)
             </button>
-            <button data-combo="paracetamol,cold_combo_pe" class="combo-preset-btn px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 text-xs font-semibold transition">
+            <button data-combo="paracetamol,cold_combo_pe" class="combo-preset-btn px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 text-xs font-bold transition">
               ⛔ Panadol + Lemsip/Codral (중복 위험)
             </button>
-            <button data-combo="ibuprofen,diclofenac_oral" class="combo-preset-btn px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 text-xs font-semibold transition">
+            <button data-combo="ibuprofen,diclofenac_oral" class="combo-preset-btn px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 text-xs font-bold transition">
               ⛔ Nurofen + Voltaren 알약 (NSAID 충돌)
             </button>
-            <button id="clearCheckerBtn" class="px-3 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-600 text-xs font-semibold transition">
+            <button id="clearCheckerBtn" class="px-3 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-600 text-xs font-bold transition">
               모두 비우기
             </button>
           </div>
         </div>
 
-        <!-- Product / Ingredient Selector for Checker -->
         <div class="mt-5 grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <!-- Left: Picker -->
           <div class="lg:col-span-5 space-y-3">
             <div class="flex items-center justify-between">
-              <label for="checkerFilterInput" class="text-xs font-bold text-slate-700 uppercase tracking-wider">1. 분석할 성분 또는 약국 제품 클릭해서 담기</label>
+              <label for="checkerFilterInput" class="text-xs font-extrabold text-slate-700">1. 분석할 성분 또는 약국 제품 클릭해서 담기</label>
               <span class="text-[11px] text-slate-500">다중 선택 가능</span>
             </div>
             <input
               id="checkerFilterInput"
               type="text"
-              placeholder="제품명(Panadol, Lemsip, Nurofen, Gaviscon) 또는 성분 검색..."
-              class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm outline-none focus:border-teal-600"
+              placeholder="제품명(Panadol, Lemsip, Nurofen, Fess) 또는 성분 검색..."
+              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm outline-none focus:border-teal-600"
             />
             <div id="checkerSelectorList" class="max-h-96 overflow-y-auto custom-scroll space-y-1.5 pr-1">
               <!-- Populated by JS -->
             </div>
           </div>
 
-          <!-- Right: Live Analysis Result -->
           <div class="lg:col-span-7 space-y-4">
             <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">2. 선택된 조합 기전 분석 및 안전성 리포트</span>
-              <span id="selectedTrayCount" class="text-xs font-semibold text-teal-700">2개 선택됨</span>
+              <span class="text-xs font-extrabold text-slate-700">2. 선택된 조합 기전 분석 및 안전성 리포트</span>
+              <span id="selectedTrayCount" class="text-xs font-bold text-teal-700">2개 선택됨</span>
             </div>
 
-            <!-- Selected Pills Tray -->
-            <div id="checkerSelectedTray" class="flex flex-wrap gap-2 p-3.5 rounded-xl bg-slate-50 border border-slate-200 min-h-[56px] items-center">
+            <div id="checkerSelectedTray" class="flex flex-wrap gap-2 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 min-h-[56px] items-center">
               <!-- Populated by JS -->
             </div>
 
-            <!-- Overall Verdict Card -->
             <div id="checkerVerdictContainer" class="space-y-4">
               <!-- Populated by JS -->
             </div>
@@ -331,7 +348,7 @@
 
     <!-- ==================== TAB 4: NZ PRODUCTS & MY CABINET ==================== -->
     <section id="tab-products" class="tab-panel hidden space-y-6 animate-fade-in">
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-5 sm:p-6">
+      <div class="bg-white rounded-3xl shadow-xs border border-slate-200 p-5 sm:p-6">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full border border-teal-200">
@@ -339,14 +356,14 @@
             </span>
             <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">뉴질랜드 약국 판매 제품 카탈로그 & 나만의 상비약장</h2>
             <p class="text-sm text-slate-600 mt-1">
-              오클랜드 등 뉴질랜드 전역 <strong>Chemist Warehouse</strong>와 <strong>Unichem / Life Pharmacy</strong>에서 구할 수 있는 대표 제품과 성분 함량, 예상 가격대, 구매 링크를 확인하고 집에 있는 약을 <strong>'내 상비약장'</strong>에 체크해 두세요.
+              뉴질랜드 약국에서 구할 수 있는 대표 제품과 성분 함량, 구매 등급(`General Sale` 마트/약국 자유구매 · `Pharmacy Only` 약국전용 · `Pharmacist Only` 약사상담)을 확인하고 집에 있는 약을 <strong>'내 약장'</strong>에 담아두세요.
             </p>
           </div>
           <div class="flex flex-wrap items-center gap-2">
-            <button id="filterCabinetOnlyBtn" class="px-3.5 py-2 rounded-xl border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 text-xs font-bold transition flex items-center gap-1.5">
+            <button id="filterCabinetOnlyBtn" class="px-4 py-2 rounded-xl border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 text-xs font-bold transition flex items-center gap-1.5">
               <span>⭐</span><span id="filterCabinetLabel">내 상비약장만 보기 (0)</span>
             </button>
-            <button id="openAddModalBtnCatalog" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition">
+            <button id="openAddModalBtnCatalog" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition">
               + 새 제품/성분 직접 추가
             </button>
           </div>
@@ -356,14 +373,14 @@
           <input
             id="productCatalogSearch"
             type="text"
-            placeholder="브랜드명(Panadol, Maxigesic, Difflam, Otrivin, Gaviscon...) 검색"
+            placeholder="브랜드명(Panadol, Maxigesic, Difflam, Fess Dry Nose, Gaviscon...) 검색"
             class="sm:col-span-2 px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm outline-none focus:border-teal-600"
           />
-          <select id="productCatalogCategory" class="px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm font-medium text-slate-700 outline-none focus:border-teal-600">
+          <select id="productCatalogCategory" class="px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm font-semibold text-slate-700 outline-none focus:border-teal-600">
             <option value="all">전체 카테고리 제품 보기</option>
             <option value="pain">진통·해열·소염제</option>
             <option value="throat">인후통·구내염 치료제</option>
-            <option value="cold">코막힘·종합감기약</option>
+            <option value="cold">코막힘·코점막보습·종합감기약</option>
             <option value="cough">기침·가래약</option>
             <option value="allergy">알레르기·비염·안약</option>
             <option value="gastro">위장·역류·설사·변비·복통약</option>
@@ -372,7 +389,6 @@
         </div>
       </div>
 
-      <!-- Product Grid -->
       <div id="productCatalogGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         <!-- Populated by JS -->
       </div>
@@ -382,35 +398,35 @@
 
   <!-- Modal: Add Custom Medicine to LocalStorage -->
   <div id="customMedModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden animate-fade-in">
-      <div class="px-6 py-4 bg-teal-900 text-white flex items-center justify-between">
+    <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden animate-fade-in">
+      <div class="px-6 py-4 bg-teal-800 text-white flex items-center justify-between">
         <div>
           <h3 class="text-base font-bold">＋ 나만의 뉴질랜드 상비약 추가</h3>
-          <p class="text-xs text-emerald-200">약국에서 새로 구매한 제품을 등록하면 해당 성분의 증상 검색·병용 체커에 자동 연동됩니다.</p>
+          <p class="text-xs text-emerald-100">새로 구매한 제품을 등록하면 증상 검색·병용 체커에 자동 연동됩니다.</p>
         </div>
-        <button id="closeCustomMedModalBtn" class="text-emerald-200 hover:text-white text-lg font-bold px-2">✕</button>
+        <button id="closeCustomMedModalBtn" class="text-emerald-100 hover:text-white text-lg font-bold px-2">✕</button>
       </div>
       <form id="customMedForm" class="p-6 space-y-4 text-xs sm:text-sm">
         <div>
           <label class="block font-bold text-slate-700 mb-1" for="customBrandInput">제품명 (Brand Name) *</label>
-          <input id="customBrandInput" type="text" required placeholder="예: Ethics Ibuprofen 200mg / Pamol 등" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 outline-none focus:border-teal-600" />
+          <input id="customBrandInput" type="text" required placeholder="예: Ethics Ibuprofen 200mg / Pamol 등" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 outline-none focus:border-teal-600" />
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block font-bold text-slate-700 mb-1" for="customIngredientSelect">핵심 성분 (Active Ingredient) *</label>
-            <select id="customIngredientSelect" required class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white outline-none focus:border-teal-600">
+            <select id="customIngredientSelect" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white outline-none focus:border-teal-600">
               <!-- Populated by JS -->
             </select>
           </div>
           <div>
             <label class="block font-bold text-slate-700 mb-1" for="customStrengthInput">함량 및 제형 *</label>
-            <input id="customStrengthInput" type="text" required placeholder="예: Paracetamol 500mg 정제" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 outline-none focus:border-teal-600" />
+            <input id="customStrengthInput" type="text" required placeholder="예: Paracetamol 500mg 정제" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 outline-none focus:border-teal-600" />
           </div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block font-bold text-slate-700 mb-1" for="customClassSelect">뉴질랜드 구매 등급</label>
-            <select id="customClassSelect" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white outline-none focus:border-teal-600">
+            <select id="customClassSelect" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white outline-none focus:border-teal-600">
               <option value="General Sale">General Sale (마트/약국 자유 구매)</option>
               <option value="Pharmacy Only">Pharmacy Only (약국 전용)</option>
               <option value="Pharmacist Only">Pharmacist Only (약사 상담)</option>
@@ -418,81 +434,181 @@
           </div>
           <div>
             <label class="block font-bold text-slate-700 mb-1" for="customPriceInput">예상 가격 / 메모</label>
-            <input id="customPriceInput" type="text" placeholder="예: NZ$8.99 (Chemist Warehouse)" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 outline-none focus:border-teal-600" />
+            <input id="customPriceInput" type="text" placeholder="예: NZ$8.99 (Chemist Warehouse)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 outline-none focus:border-teal-600" />
           </div>
         </div>
         <div>
           <label class="block font-bold text-slate-700 mb-1" for="customNotesInput">복용 메모 / 사용 상황</label>
-          <input id="customNotesInput" type="text" placeholder="예: 식후 복용, 아이 해열용 등" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 outline-none focus:border-teal-600" />
+          <input id="customNotesInput" type="text" placeholder="예: 식후 복용, 아이 해열용 등" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 outline-none focus:border-teal-600" />
         </div>
         <div class="pt-2 flex items-center justify-end gap-2 border-t border-slate-100">
           <button type="button" id="cancelCustomMedBtn" class="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-600 font-semibold">취소</button>
-          <button type="submit" class="px-5 py-2 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold shadow-sm">상비약장에 저장</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold shadow-xs">상비약장에 저장</button>
         </div>
       </form>
     </div>
   </div>
 
   <!-- Toast Notification -->
-  <div id="toastBanner" class="fixed bottom-5 right-5 z-50 hidden bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl border border-slate-700 text-xs sm:text-sm font-medium items-center gap-2">
+  <div id="toastBanner" class="fixed bottom-5 right-5 z-50 hidden bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-xl border border-slate-700 text-xs sm:text-sm font-medium items-center gap-2">
     <span id="toastMessage">저장되었습니다.</span>
   </div>
 
   <!-- Footer -->
   <footer class="bg-white border-t border-slate-200 mt-12 py-6 text-xs text-slate-500">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
       <div>
-        <strong class="text-slate-700">NZ Pharmacy MedGuide</strong> · 오클랜드 및 뉴질랜드 전역 Chemist Warehouse · Unichem Pharmacy 일반의약품 성분 데이터베이스
+        <strong class="text-slate-700">NZ Pharmacy MedGuide v2.0</strong> · 뉴질랜드 Medsafe 및 Chemist Warehouse · Unichem Pharmacy 일반의약품 가이드
       </div>
       <div class="flex flex-wrap gap-4">
-        <a href="https://www.chemistwarehouse.co.nz" target="_blank" rel="noopener noreferrer" class="text-teal-700 hover:underline font-medium">Chemist Warehouse NZ 공식몰 ↗</a>
-        <a href="https://www.unichem.co.nz" target="_blank" rel="noopener noreferrer" class="text-teal-700 hover:underline font-medium">Unichem Pharmacy NZ 공식몰 ↗</a>
-        <a href="https://www.medsafe.govt.nz" target="_blank" rel="noopener noreferrer" class="text-teal-700 hover:underline font-medium">NZ Medsafe 의약품 안전청 ↗</a>
+        <a href="https://www.chemistwarehouse.co.nz" target="_blank" rel="noopener noreferrer" class="text-teal-700 hover:underline font-semibold">Chemist Warehouse NZ ↗</a>
+        <a href="https://www.unichem.co.nz" target="_blank" rel="noopener noreferrer" class="text-teal-700 hover:underline font-semibold">Unichem Pharmacy NZ ↗</a>
+        <a href="https://www.medsafe.govt.nz" target="_blank" rel="noopener noreferrer" class="text-teal-700 hover:underline font-semibold">NZ Medsafe ↗</a>
       </div>
     </div>
   </footer>
 
   <!-- ==================== APPLICATION SCRIPT ==================== -->
   <script>
-    // 1. SYMPTOM DEFINITIONS
+    // 1. SYMPTOM DEFINITIONS (24 Symptoms including Nasal Dryness / Crusting / Bleeding)
     const BODY_CATEGORIES = [
       { id: 'all', name: '전체 증상', icon: '🔍' },
       { id: 'head_fever', name: '머리아픔 · 열 · 몸살', icon: '🤒' },
       { id: 'throat_mouth', name: '목아픔 · 구내염', icon: '🗣️' },
-      { id: 'nose_sinus', name: '코막힘 · 콧물 · 비염', icon: '👃' },
+      { id: 'nose_sinus', name: '코안 헌데/딱지 · 코막힘 · 비염', icon: '👃' },
       { id: 'chest_cough', name: '기침 · 가래', icon: '🫁' },
       { id: 'stomach_gut', name: '위장 · 역류 · 복통 · 설사 · 변비', icon: '🫃' },
       { id: 'eye_skin_other', name: '눈 · 피부 · 방광염 · 멀미 · 탈수', icon: '🩹' }
     ];
 
     const SYMPTOMS = [
-      { id: 'fever', label: '발열 · 오한 (Fever)', cat: 'head_fever', keywords: ['열', '발열', '오한', '체온', '고열', '감기열'] },
-      { id: 'headache', label: '두통 · 편두통 (Headache)', cat: 'head_fever', keywords: ['머리', '두통', '편두통', '지끈'] },
-      { id: 'bodyache', label: '몸살 · 근육통 · 관절통 (Body & Muscle Pain)', cat: 'head_fever', keywords: ['몸살', '근육통', '관절', '허리', '담걸림', '염좌', '삐었을때'] },
-      { id: 'tooth_period', label: '치통 · 생리통 (Dental & Period Pain)', cat: 'head_fever', keywords: ['치통', '이아픔', '사랑니', '생리통', '그날'] },
-      { id: 'sorethroat', label: '인후통 · 침 삼킬 때 목 따가움 (Sore Throat)', cat: 'throat_mouth', keywords: ['목아픔', '인후통', '목감기', '편도', '따가움', '목부음'] },
-      { id: 'mouthulcer', label: '구내염 · 입병 · 잇몸 통증 (Mouth Ulcer)', cat: 'throat_mouth', keywords: ['구내염', '입병', '입안', '헌데', '혓바늘', '잇몸'] },
-      { id: 'blockednose', label: '코막힘 · 부비동 코막힘 (Blocked Nose & Sinus)', cat: 'nose_sinus', keywords: ['코막힘', '축농증', '부비동', '답답', '코가막혀'] },
-      { id: 'runnynose', label: '콧물 · 코감기 (Runny Nose)', cat: 'nose_sinus', keywords: ['콧물', '줄줄', '코감기'] },
-      { id: 'sneezing', label: '재채기 · 알레르기 비염 · 꽃가루 (Hayfever)', cat: 'nose_sinus', keywords: ['비염', '알레르기', '꽃가루', '재채기', '간지러움', '헤이피버'] },
-      { id: 'drycough', label: '마른기침 · 콜록거림 (Dry Tickly Cough)', cat: 'chest_cough', keywords: ['마른기침', '기침', '콜록', '목간질'] },
-      { id: 'chesty', label: '가래기침 · 끈적한 가래 (Chesty Mucus Cough)', cat: 'chest_cough', keywords: ['가래', '가래기침', '진해거담', '그르렁'] },
-      { id: 'heartburn', label: '속쓰림 · 신물 · 역류성 식도염 (Heartburn & Reflux)', cat: 'stomach_gut', keywords: ['속쓰림', '신물', '역류', '식도염', '위산', '가슴쓰림'] },
-      { id: 'indigestion', label: '소화불량 · 가스 · 더부룩함 (Indigestion & Bloating)', cat: 'stomach_gut', keywords: ['소화', '가스', '더부룩', '배에가스', '체함'] },
-      { id: 'cramps', label: '배앓이 · 위경련 · 쥐어짜는 복통 (Stomach Cramps)', cat: 'stomach_gut', keywords: ['배앓이', '복통', '위경련', '장경련', '배가쥐어짜듯', '과민성'] },
-      { id: 'diarrhoea', label: '급성 설사 · 물설사 (Diarrhoea)', cat: 'stomach_gut', keywords: ['설사', '물설사', '장염', '배탈'] },
-      { id: 'constipation', label: '변비 · 배변 곤란 (Constipation)', cat: 'stomach_gut', keywords: ['변비', '쾌변', '배변', '딱딱한변'] },
-      { id: 'dehydration', label: '탈수 · 구토/설사 후 수분보충 · 숙취 (Dehydration)', cat: 'eye_skin_other', keywords: ['탈수', '전해질', '수분', '구토', '숙취'] },
-      { id: 'itchyeyes', label: '눈 가려움 · 알레르기 결막염 (Itchy Allergy Eyes)', cat: 'eye_skin_other', keywords: ['눈가려움', '결막염', '눈충혈', '안약'] },
-      { id: 'hives_eczema', label: '두드러기 · 습진 · 피부 가려움/벌레물림 (Itchy Skin & Rash)', cat: 'eye_skin_other', keywords: ['두드러기', '가려움', '습진', '벌레', '모기', '피부염'] },
-      { id: 'fungal', label: '무좀 · 곰팡이성 피부염 · 칸디다 (Fungal Infection)', cat: 'eye_skin_other', keywords: ['무좀', '곰팡이', '백선', '완선', '칸디다'] },
-      { id: 'wound', label: '찰과상 · 상처 소독 · 감염 예방 (Cuts & Minor Wounds)', cat: 'eye_skin_other', keywords: ['상처', '소독', '연고', '까지거나', '화상', '여드름상처'] },
-      { id: 'uti', label: '방광염 · 소변 볼 때 찌릿한 통증 (UTI / Cystitis)', cat: 'eye_skin_other', keywords: ['방광염', '소변', '배뇨통', '오줌소태', '찌릿'] },
-      { id: 'motionsickness', label: '멀미 · 어지러움 · 구역감 (Travel / Motion Sickness)', cat: 'eye_skin_other', keywords: ['멀미', '배멀미', '차멀미', '어지러움', '속울렁'] }
+      { id: 'nasaldry', label: '코안이 헐고 피·코딱지·건조함 (Dry/Crusted/Bleeding Nose)', cat: 'nose_sinus', keywords: ['코안', '코속', '코 안', '코 속', '헐었', '헌거', '헌 거', '헐어', '코딱지', '딱지', '코피', '피가', '피나', '코건조', '코가 건조', '쓰라림', '코점막'] },
+      { id: 'blockednose', label: '코막힘 · 부비동 코막힘 (Blocked Nose & Sinus)', cat: 'nose_sinus', keywords: ['코막힘', '축농증', '부비동', '답답', '코가막혀', '코가 막혀', '코 막힘', '숨쉬기'] },
+      { id: 'runnynose', label: '콧물 · 코감기 (Runny Nose)', cat: 'nose_sinus', keywords: ['콧물', '줄줄', '코감기', '맑은콧물', '맑은 콧물'] },
+      { id: 'sneezing', label: '재채기 · 알레르기 비염 · 꽃가루 (Hayfever)', cat: 'nose_sinus', keywords: ['비염', '알레르기', '꽃가루', '재채기', '간지러움', '헤이피버', '봄바람', '먼지'] },
+      { id: 'fever', label: '발열 · 오한 (Fever & Chills)', cat: 'head_fever', keywords: ['열', '발열', '오한', '체온', '고열', '감기열', '으슬으슬', '열나', '열이'] },
+      { id: 'headache', label: '두통 · 편두통 (Headache)', cat: 'head_fever', keywords: ['머리', '두통', '편두통', '지끈', '깨질듯', '관자놀이'] },
+      { id: 'bodyache', label: '몸살 · 근육통 · 관절통 (Body & Muscle Pain)', cat: 'head_fever', keywords: ['몸살', '근육통', '관절', '허리', '담걸림', '염좌', '삐었을때', '삐끗', '온몸이', '쑤셔', '쑤시', '어깨', '무릎', '발목'] },
+      { id: 'tooth_period', label: '치통 · 생리통 (Dental & Period Pain)', cat: 'head_fever', keywords: ['치통', '이아픔', '이가 아파', '사랑니', '잇몸', '생리통', '그날', '마법', '아랫배'] },
+      { id: 'sorethroat', label: '인후통 · 침 삼킬 때 목 따가움 (Sore Throat)', cat: 'throat_mouth', keywords: ['목아픔', '목이 아파', '인후통', '목감기', '편도', '따가움', '목부음', '목이 부어', '목이 붓고', '침 삼킬', '침삼킬', '목이 칼칼', '찢어질'] },
+      { id: 'mouthulcer', label: '구내염 · 입병 · 혓바늘 (Mouth Ulcer)', cat: 'throat_mouth', keywords: ['구내염', '입병', '입안', '입 안', '혓바늘', '혀가', '입술 안쪽', '입안이 헐'] },
+      { id: 'drycough', label: '마른기침 · 목 간질거림 (Dry Tickly Cough)', cat: 'chest_cough', keywords: ['마른기침', '마른 기침', '콜록', '목간질', '기침이 계속', '기침만', '발작적'] },
+      { id: 'chesty', label: '가래기침 · 끈적한 가래 (Chesty Mucus Cough)', cat: 'chest_cough', keywords: ['가래', '가래기침', '진해거담', '그르렁', '누런 가래', '끈적한'] },
+      { id: 'heartburn', label: '속쓰림 · 신물 · 역류성 식도염 (Heartburn & Reflux)', cat: 'stomach_gut', keywords: ['속쓰림', '속이 쓰려', '속이 타는', '신물', '역류', '식도염', '위산', '가슴쓰림', '트림', '누우면'] },
+      { id: 'indigestion', label: '소화불량 · 가스 · 더부룩함 (Indigestion & Bloating)', cat: 'stomach_gut', keywords: ['소화', '가스', '더부룩', '배에가스', '배가 빵빵', '체함', '체한', '부글부글', '더부룩'] },
+      { id: 'cramps', label: '배앓이 · 위경련 · 쥐어짜는 복통 (Stomach Cramps)', cat: 'stomach_gut', keywords: ['배앓이', '복통', '위경련', '장경련', '쥐어짜', '비틀리', '배가 너무 아파', '과민성', '배가 콕콕'] },
+      { id: 'diarrhoea', label: '급성 설사 · 물설사 (Diarrhoea)', cat: 'stomach_gut', keywords: ['설사', '물설사', '장염', '배탈', '묽은변', '화장실'] },
+      { id: 'constipation', label: '변비 · 딱딱한 변 (Constipation)', cat: 'stomach_gut', keywords: ['변비', '쾌변', '배변', '딱딱한변', '화장실을 못', '똥이'] },
+      { id: 'dehydration', label: '탈수 · 구토/설사 후 기력저하 · 숙취 (Dehydration)', cat: 'eye_skin_other', keywords: ['탈수', '전해질', '수분', '구토', '토했', '기운이 없', '기력', '숙취', '땀을 많이'] },
+      { id: 'itchyeyes', label: '눈 가려움 · 알레르기 결막염 (Itchy Allergy Eyes)', cat: 'eye_skin_other', keywords: ['눈가려움', '눈이 가려', '눈까지 너무 가려', '결막염', '눈충혈', '눈이 빨개', '안약'] },
+      { id: 'hives_eczema', label: '두드러기 · 습진 · 피부 가려움/벌레물림 (Itchy Skin & Rash)', cat: 'eye_skin_other', keywords: ['두드러기', '피부가 가려', '습진', '벌레', '모기', '피부염', '발진', '오돌토돌'] },
+      { id: 'fungal', label: '무좀 · 곰팡이성 피부염 · 칸디다 (Fungal Infection)', cat: 'eye_skin_other', keywords: ['무좀', '곰팡이', '백선', '완선', '칸디다', '발가락 사이'] },
+      { id: 'wound', label: '찰과상 · 피부 상처 · 진물 소독 (Cuts & Minor Wounds)', cat: 'eye_skin_other', keywords: ['상처', '소독', '연고', '까지거나', '까졌', '피부 상처', '넘어져', '긁힌'] },
+      { id: 'uti', label: '방광염 · 소변 볼 때 찌릿한 통증 (UTI / Cystitis)', cat: 'eye_skin_other', keywords: ['방광염', '소변', '배뇨통', '오줌소태', '찌릿', '소변 볼 때', '화장실을 자꾸', '잔뇨감'] },
+      { id: 'motionsickness', label: '멀미 · 어지러움 · 구역감 (Travel / Motion Sickness)', cat: 'eye_skin_other', keywords: ['멀미', '배멀미', '차멀미', '어지러움', '어지럽', '속울렁', '페리', '울렁거'] }
     ];
 
-    // 2. ACTIVE INGREDIENTS DATABASE
+    // 2. NATURAL LANGUAGE CONVERSATIONAL SYMPTOM ANALYZER RULES
+    // Parses free-text Korean/English sentences into matched symptom IDs, clinical interpretation, and prioritized ingredient IDs
+    const NLP_CONVERSATIONAL_RULES = [
+      {
+        id: 'rule_nasal_crust_bleed',
+        test: (t) => (t.includes('코') && (t.includes('헌') || t.includes('헐') || t.includes('딱지') || t.includes('피') || t.includes('건조') || t.includes('쓰라'))),
+        detectedSymptoms: ['nasaldry', 'wound'],
+        boostIngredients: ['nasal_moist_oil', 'saline_nasal', 'hydrocortisone_topical'],
+        penalizeIngredients: ['xylometazoline', 'cold_combo_pe'],
+        title: '코 점막 건조 · 미세 출혈 및 코딱지 (Nasal Vestibulitis / Dry Mucosa)',
+        advice: '코 안쪽 점막이 건조해져 헐고 피가 섞인 딱지가 앉을 때는 식염수·히알루론산 스프레이(Flo Saline Plus)로 딱지를 부드럽게 불려 씻어낸 뒤, 세서미 오일·비타민E 보습 스프레이(Fess Dry Nose Oil / Nozoil)로 유막 코팅을 해주는 것이 1순위입니다. 코 입구가 헐어 세균 감염이 우려되면 항생제 내성이 없는 Crystaderm 연고를 면봉에 묻혀 코 입구에 얇게 발라주세요. (⚠️ 주의: Otrivin 같은 혈관수축 스프레이나 스테로이드 스프레이는 코점막을 더 건조하게 하고 코피를 악화시키므로 피하세요!)'
+      },
+      {
+        id: 'rule_severe_throat_fever',
+        test: (t) => ((t.includes('목') || t.includes('침')) && (t.includes('붓') || t.includes('부어') || t.includes('따가') || t.includes('찢어') || t.includes('아파')) && (t.includes('열') || t.includes('오한') || t.includes('으슬'))),
+        detectedSymptoms: ['sorethroat', 'fever', 'bodyache'],
+        boostIngredients: ['benzydamine_lozenge', 'maxigesic_combo', 'ibuprofen', 'paracetamol'],
+        penalizeIngredients: [],
+        title: '급성 인후염 · 편도 부종 및 발열 (Acute Sore Throat with Fever)',
+        advice: '목이 심하게 붓고 열이 날 때는 말초 염증·부기를 빼주는 Ibuprofen(Nurofen)과 중추 해열진통제 Paracetamol(Panadol)을 병용(또는 복합제 Maxigesic 복용)하면서, 목 점막을 직접 마취·소염시키는 Difflam Plus 트로키를 녹여 드시는 것이 가장 빠릅니다.'
+      },
+      {
+        id: 'rule_reflux_night',
+        test: (t) => (t.includes('신물') || t.includes('역류') || t.includes('식도') || (t.includes('속') && t.includes('쓰')) || (t.includes('가슴') && t.includes('타는'))),
+        detectedSymptoms: ['heartburn', 'indigestion'],
+        boostIngredients: ['alginate_antacid', 'omeprazole'],
+        penalizeIngredients: ['ibuprofen', 'diclofenac_oral', 'maxigesic_combo'],
+        title: '위산 역류 · 역류성 식도염 및 속쓰림 (Gastric Reflux & Heartburn)',
+        advice: '식후나 누웠을 때 올라오는 신물에는 위 상단에 물리적 방어막(Raft)을 띄우는 Gaviscon Dual Action이 3~5분 내 즉효를 내며, 잦은 재발을 막으려면 아침 식전 위산 분비 억제제 Losec(Omeprazole)을 함께 조합하세요. (⚠️ 소염진통제 Nurofen/Voltaren은 위산을 자극하므로 금기!)'
+      },
+      {
+        id: 'rule_cramps_diarrhoea',
+        test: (t) => ((t.includes('쥐어짜') || t.includes('비틀') || t.includes('배앓이') || t.includes('경련') || (t.includes('배') && t.includes('아파'))) && (t.includes('설사') || t.includes('물설사') || t.includes('배탈'))),
+        detectedSymptoms: ['cramps', 'diarrhoea', 'dehydration'],
+        boostIngredients: ['hyoscine_butylbromide', 'loperamide', 'oral_rehydration'],
+        penalizeIngredients: ['docusate_senna', 'ibuprofen'],
+        title: '장 경련성 복통 및 급성 설사 (Abdominal Spasms & Acute Diarrhoea)',
+        advice: '쥐어짜는 배앓이는 일반 진통제가 아닌 위장 평활근 진경제 Buscopan으로 장 근육 경련을 풀어주어야 하며, 물설사에는 Imodium과 탈수 예방용 전해질 수액제 Hydralyte를 함께 보충하세요.'
+      },
+      {
+        id: 'rule_hayfever_nondrowsy',
+        test: (t) => (t.includes('재채기') || t.includes('꽃가루') || t.includes('비염') || t.includes('알레르기') || (t.includes('눈') && t.includes('가려')) || (t.includes('맑은') && t.includes('콧물'))),
+        detectedSymptoms: ['sneezing', 'runnynose', 'itchyeyes'],
+        boostIngredients: ['cetirizine', 'fluticasone_nasal', 'ketotifen_eye'],
+        penalizeIngredients: [],
+        title: '알레르기성 비염 · 결막염 (Allergic Rhinitis / Hayfever)',
+        advice: '졸음 걱정 없는 2세대 항히스타민제(Telfast 180mg 또는 Claratyne/Zyrtec)를 하루 1알 복용하면서, 코점막 염증을 근본 차단하는 Flixonase(또는 Dymista) 비강 스프레이와 눈 가려움 전용 안약 Zaditen을 조합하면 가장 효과적입니다.'
+      },
+      {
+        id: 'rule_uti_burning',
+        test: (t) => ((t.includes('소변') || t.includes('오줌') || t.includes('배뇨') || t.includes('방광')) && (t.includes('찌릿') || t.includes('타는') || t.includes('아파') || t.includes('자꾸'))),
+        detectedSymptoms: ['uti'],
+        boostIngredients: ['sodium_citrate_uti', 'paracetamol'],
+        penalizeIngredients: [],
+        title: '방광염 의심 · 배뇨 시 작열감 및 빈뇨 (Cystitis / UTI Symptoms)',
+        advice: '산성 소변이 염증 난 요도를 자극해 찌릿한 통증이 생기는 상태입니다. 소변을 알칼리성으로 중화하는 마시는 가루약 Ural Sachets를 복용하면 작열감이 빠르게 줄어들며, 뉴질랜드 약국에서 약사와 상담하면 처방전 없이 방광염 항생제도 구매 가능합니다.'
+      }
+    ];
+
+    // 3. ACTIVE INGREDIENTS DATABASE (19 Groups including Nasal Mucosa Repair / Oil & Saline)
     const INGREDIENTS = [
+      {
+        id: 'nasal_moist_oil',
+        nameKo: '세서미 오일 · 비타민 E / 덱스판테놀 (코안 헐음·코딱지·미세출혈 보습/재생제)',
+        nameEn: 'Sesame Seed Oil + Vitamin E / Dexpanthenol Nasal Spray & Ointment',
+        category: 'cold',
+        drugClass: '비강 점막 유막 보호 · 상피 재생 보습제 (Nasal Mucosa Lubricant & Healer)',
+        symptoms: ['nasaldry', 'wound', 'blockednose'],
+        whenToUse: '건조한 날씨, 히터/에어컨, 잦은 코풀기, 또는 비염 스프레이 사용 후 "코 안쪽이 헐어서 쓰라리고, 피가 살짝 묻어나오거나 매일 아침 딱딱한 코딱지가 앉을 때" 코점막을 보호하고 아물게 하기 위해 사용합니다.',
+        mechanism: '일반 식염수가 수분을 공급한 뒤 금방 증발하는 것과 달리, 100% 정제 세서미 오일(Sesame oil)과 항산화제 Vitamin E(토코페롤)가 헐어 있는 비강 점막 표면에 얇고 통기성 있는 보호 유막(Lipid barrier)을 형성합니다. 이 유막이 수분 증발을 막아 딱딱한 코딱지(Crust)와 마른 피딱지가 생기는 것을 방지하고, 노출된 미세 모세혈관을 부드럽게 감싸 코피 재발을 막아주며 점막 상피세포의 자연 재생을 촉진합니다.',
+        expectedEffect: '뿌린 즉시 코 안쪽의 당김과 쓰라림이 진정되며, 아침에 일어났을 때 피 섞인 딱딱한 코딱지가 생기는 현상이 현저히 줄어듭니다.',
+        dosingInfo: '하루 2~3회(특히 아침 기상 직후 및 취침 전) 각 콧구멍에 1~2회 분사 후 코 바깥쪽을 살살 마사지해 펴 바릅니다.',
+        synergyWith: [
+          { id: 'saline_nasal', reason: '🌟 [코딱지·코헐음 최강 2단계 조합] 먼저 Flo Saline Plus(등장성 식염수+미네랄)로 이미 굳어 있는 코딱지와 마른 피를 불려서 부드럽게 씻어낸 뒤, 그 위에 Fess Dry Nose Oil을 뿌려 유막 코팅을 해주면 수분이 갇혀 점막이 훨씬 빨리 아뭅니다.' },
+          { id: 'hydrocortisone_topical', reason: '코 입구(전정부)가 심하게 헐어 진물이 나거나 세균성 딱지(비전정염)가 계속 생길 때, 코 입구 상처에 항생제 내성 없는 살균 연고 Crystaderm(과산화수소 1%)이나 재생 연고 Bepanthen을 면봉으로 얇게 발라주면 감염 예방과 상처 치유에 시너지가 납니다.' }
+        ],
+        avoidWith: [
+          { id: 'xylometazoline', reason: '🚨 [절대 피할 것: 혈관수축제] 코안이 헐고 피가 날 때 Otrivin(Xylometazoline) 같은 코막힘 혈관수축 스프레이를 뿌리면 점막 혈류량이 줄어 점막이 더 심하게 마르고 궤양·코피가 악화됩니다.' }
+        ],
+        warnings: '코딱지를 손가락이나 면봉으로 억지로 떼어내면 모세혈관이 다시 터져 피가 나고 세균이 들어가므로, 반드시 식염수/오일 스프레이로 충분히 불린 뒤 자연스럽게 떨어지게 하세요.',
+        healthifyUrl: 'https://www.unichem.co.nz/products/fess-dry-nose-relief-10ml'
+      },
+      {
+        id: 'saline_nasal',
+        nameKo: '등장성 생리식염수 + 미네랄 (비강 세척 · 코딱지 연화 보습 스프레이)',
+        nameEn: 'Isotonic Saline Solution + Minerals (Flo Saline Plus / Fess Saline)',
+        category: 'cold',
+        drugClass: '비약물성 점막 수분 공급 · 딱지 연화 세척제 (Non-medicated Nasal Wash)',
+        symptoms: ['nasaldry', 'blockednose', 'runnynose', 'sneezing'],
+        whenToUse: '코안이 건조해 마른 코딱지나 피딱지가 앉았을 때 이를 자극 없이 불려서 제거하거나, 끈적한 콧물·꽃가루·먼지를 부작용 걱정 없이 매일 씻어낼 때 사용합니다.',
+        mechanism: '체액과 동일한 삼투압의 등장성 식염수(Isotonic saline)와 칼슘·마그네슘 등 미네랄 이온이 말라붙은 점액과 혈액 딱지(Dry blood & mucus crust) 사이로 침투해 결합을 느슨하게 불려주며, 손상된 비강 점막의 점액섬모 운동(Mucociliary clearance)을 회복시켜 이물질을 밖으로 밀어냅니다.',
+        expectedEffect: '분사 즉시 코안이 촉촉해지고 딱딱하던 코딱지와 끈적한 콧물이 부드럽게 녹아 통증이나 출혈 없이 제거됩니다.',
+        dosingInfo: '하루 수회 필요할 때마다 양쪽 코에 충분히 분사한 뒤 1~2분 기다려 딱지가 불어나면 살살 코를 풀거나 닦아냅니다.',
+        synergyWith: [
+          { id: 'nasal_moist_oil', reason: '식염수 스프레이(Flo Saline Plus)로 코안을 적시고 청소한 직후 오일 스프레이(Fess Dry Nose Oil)로 코팅하면 수분 유지력이 3배 이상 길어집니다.' },
+          { id: 'fluticasone_nasal', reason: '알레르기 비염 스프레이(Flixonase) 사용 10분 전에 식염수로 코안을 세척하면 약물 흡수율이 높아지고 스테로이드로 인한 코 건조증/코피 부작용을 예방합니다.' }
+        ],
+        avoidWith: [],
+        warnings: '무약물·무보존제 제품은 영유아, 임산부, 고혈압 환자 누구나 매일 횟수 제한 없이 안전하게 사용할 수 있습니다.',
+        healthifyUrl: 'https://www.unichem.co.nz/products/flo-saline-plus-nasal-spray-30ml'
+      },
       {
         id: 'paracetamol',
         nameKo: '파라세타몰 (아세트아미노펜)',
@@ -501,17 +617,17 @@
         drugClass: '중추신경계 해열·진통제 (Non-opioid Analgesic & Antipyretic)',
         symptoms: ['fever', 'headache', 'bodyache', 'sorethroat', 'tooth_period'],
         whenToUse: '발열, 오한, 두통, 초기 인후통, 치통이 있을 때 위장 부담 없이 가장 먼저 복용하는 1차 기본 해열진통제입니다. 공복에도 복용 가능합니다.',
-        mechanism: '뇌와 척수(중추신경계)의 COX(사이클로옥시게나제) 효소(특히 COX-3 경로)와 세로토닌 통증 전달 경로를 선택적으로 차단하여 통증 신호를 줄이고, 뇌 시상하부의 체온조절 중추에 직접 작용해 열을 내립니다. 말초 조직의 염증을 줄이는 소염 작용은 거의 없는 대신 위점막을 자극하지 않습니다.',
+        mechanism: '뇌와 척수(중추신경계)의 COX 효소와 세로토닌 통증 전달 경로를 선택적으로 차단하여 통증 신호를 줄이고, 뇌 시상하부의 체온조절 중추에 직접 작용해 열을 내립니다. 말초 조직의 염증을 줄이는 소염 작용은 거의 없는 대신 위점막을 자극하지 않습니다.',
         expectedEffect: '복용 후 30~45분 내 발열 감소 및 통증 완화 시작 (4~6시간 지속). 위장 장애가 거의 없어 공복 복용에 안전합니다.',
         dosingInfo: '성인 기준 1회 500mg~1000mg(1~2정), 4~6시간 간격 복용. 24시간 내 절대 4,000mg(8정)을 초과하지 마세요.',
         synergyWith: [
-          { id: 'ibuprofen', reason: '중추(뇌)에서 통증/열을 잡는 Paracetamol과 말초 부위의 염증 물질(프로스타글란딘) 생성을 막는 Ibuprofen은 작용 기전과 대사 경로(간 vs 신장)가 완전히 달라 함께 복용하거나 교차 복용 시 진통·해열 시너지가 극대화됩니다.' },
+          { id: 'ibuprofen', reason: '중추(뇌)에서 통증/열을 잡는 Paracetamol과 말초 부위의 염증 물질 생성을 막는 Ibuprofen은 작용 기전과 대사 경로(간 vs 신장)가 완전히 달라 함께 복용하거나 교차 복용 시 진통·해열 시너지가 극대화됩니다.' },
           { id: 'benzydamine_lozenge', reason: '전신 해열·진통과 목 국소 소염/마취를 동시에 해결합니다.' },
           { id: 'xylometazoline', reason: '감기 두통/몸살과 코막힘을 서로 다른 경로로 빠르게 해소합니다.' },
           { id: 'cetirizine', reason: '열/몸살과 알레르기·콧물 증상을 충돌 없이 함께 완화합니다.' }
         ],
         avoidWith: [
-          { id: 'cold_combo_pe', reason: '🚨 [성분 중복 위험] Lemsip, Codral 등 뉴질랜드 종합감기약과 Maxigesic에는 이미 Paracetamol이 500mg~1000mg 들어 있습니다! 함께 복용 시 일일 최대 허용량(4,000mg) 초과로 심각한 급성 간 독성을 유발할 수 있습니다.' },
+          { id: 'cold_combo_pe', reason: '🚨 [성분 중복 위험] Lemsip, Codral 등 뉴질랜드 종합감기약에는 이미 Paracetamol이 500mg~1000mg 들어 있습니다! 함께 복용 시 일일 최대 허용량(4,000mg) 초과로 급성 간 독성을 유발할 수 있습니다.' },
           { id: 'maxigesic_combo', reason: '🚨 [성분 중복 위험] Maxigesic 및 Nuromol에는 이미 Paracetamol이 포함되어 있으므로 절대 추가 복용하지 마세요.' }
         ],
         warnings: '음주 후 복용 금지. 간 질환자는 복용 전 의사/약사 상담 필수.',
@@ -526,7 +642,7 @@
         symptoms: ['bodyache', 'headache', 'tooth_period', 'sorethroat', 'fever'],
         whenToUse: '단순 통증을 넘어 "부어오르고 열감이 있는 염증성 통증"(심한 목 부음, 사랑니/치통, 생리통, 근육통, 관절염, 편두통)에 Paracetamol보다 효과적입니다.',
         mechanism: '통증과 염증이 발생한 말초 부위에서 COX-1 및 COX-2 효소를 억제하여 염증·통증·발열을 일으키는 핵심 화학물질인 프로스타글란딘(Prostaglandin) 합성을 근본적으로 차단합니다.',
-        expectedEffect: '복용 후 30~60분 내 부기·염증 감소 및 강력한 진통·해열 효과 (6~8시간 지속). 특히 생리통(자궁 수축 유발 프로스타글란딘 차단)과 목이 부은 인후통에 탁월합니다.',
+        expectedEffect: '복용 후 30~60분 내 부기·염증 감소 및 강력한 진통·해열 효과 (6~8시간 지속). 특히 생리통과 목이 부은 인후통에 탁월합니다.',
         dosingInfo: '성인 기준 1회 200mg~400mg(1~2정), 6~8시간 간격으로 식후 또는 우유/음식과 함께 복용 (하루 최대 1,200mg).',
         synergyWith: [
           { id: 'paracetamol', reason: '말초 소염진통(Ibuprofen) + 중추 해열진통(Paracetamol) 이중 기전 시너지로 심한 통증과 고열을 효과적으로 잡습니다.' },
@@ -534,10 +650,10 @@
           { id: 'xylometazoline', reason: '부비동(축농증) 염증 통증과 코점막 부종을 동시에 줄여줍니다.' }
         ],
         avoidWith: [
-          { id: 'diclofenac_oral', reason: '🚨 [동일 계열 NSAID 중복 금기] Voltaren(Diclofenac) 알약이나 아스피린, 나프록센과 함께 복용하면 소염 효과는 더 커지지 않고 위출혈·위궤양 및 급성 신장 손상 위험만 급증합니다.' },
+          { id: 'diclofenac_oral', reason: '🚨 [동일 계열 NSAID 중복 금기] Voltaren(Diclofenac) 알약이나 아스피린과 함께 복용하면 소염 효과는 더 커지지 않고 위출혈·위궤양 및 급성 신장 손상 위험만 급증합니다.' },
           { id: 'maxigesic_combo', reason: '🚨 [성분 중복 위험] Maxigesic이나 Nuromol에 이미 Ibuprofen이 들어 있으므로 중복 복용하지 마세요.' }
         ],
-        warnings: '위궤양, 신장 질환, 임신부(특히 임신 후기), 천식 환자(NSAID 유발 기관지 경련 가능)는 피해야 합니다.',
+        warnings: '위궤양, 신장 질환, 임신부(특히 임신 후기), 천식 환자는 피해야 합니다.',
         healthifyUrl: 'https://www.chemistwarehouse.co.nz/shop-online/196/analgesics'
       },
       {
@@ -580,7 +696,7 @@
           { id: 'omeprazole', reason: '위장 자극을 줄이기 위해 위산분비억제제(Losec 등)와 함께 복용할 수 있습니다.' }
         ],
         avoidWith: [
-          { id: 'ibuprofen', reason: '🚨 [NSAID 중복 금기] Nurofen(Ibuprofen)과 절대 함께 복용하지 마세요. 위장관 천공/출혈 및 신장 손상 위험이 급격히 높아집니다.' },
+          { id: 'ibuprofen', reason: '🚨 [NSAID 중복 금기] Nurofen(Ibuprofen)과 절대 함께 복용하지 마세요. 위장관 출혈 및 신장 손상 위험이 급격히 높아집니다.' },
           { id: 'maxigesic_combo', reason: '🚨 [NSAID 중복 금기] Maxigesic 내 Ibuprofen과 충돌합니다.' },
           { id: 'diclofenac_gel', reason: '⚠️ [용량 누적 주의] 경구용 Diclofenac을 복용하면서 외용 Diclofenac 겔을 넓은 부위에 과량 바르면 전신 흡수량이 늘어날 수 있습니다.' }
         ],
@@ -615,7 +731,7 @@
         drugClass: '국소 비스테로이드 소염·진통·항균·마취제 (Topical Throat Anti-inflammatory & Anaesthetic)',
         symptoms: ['sorethroat', 'mouthulcer'],
         whenToUse: '침을 삼키기 힘들 정도로 목이 붓고 따가운 심한 인후통이나 편도염에 사용합니다. 단순 사탕이 아니라 목 점막 염증을 직접 가라앉히고 마취시키는 약입니다.',
-        mechanism: '① Benzydamine은 국소 작용 NSAID로 목 점막 조직에 흡수되어 전염증성 사이토카인(TNF-α, IL-1β)과 프로스타글란딘 생성을 억제하고 세포막을 안정화해 부기를 뺍니다. ② Cetylpyridinium은 양이온 계면활성제로 세균 세포막을 파괴해 2차 감염을 막습니다. ③ Difflam Plus에 추가된 Lignocaine(리도카인)은 신경 나트륨 채널을 차단해 즉각적으로 목 통증을 마취시킵니다.',
+        mechanism: '① Benzydamine은 국소 작용 NSAID로 목 점막 조직에 흡수되어 전염증성 사이토카인과 프로스타글란딘 생성을 억제해 부기를 뺍니다. ② Cetylpyridinium은 세균 세포막을 파괴해 2차 감염을 막습니다. ③ Difflam Plus에 추가된 Lignocaine(리도카인)은 신경 나트륨 채널을 차단해 즉각적으로 목 통증을 마취시킵니다.',
         expectedEffect: '입안에서 천천히 녹여 먹으면 1~3분 내 목이 얼얼해지며 통증이 즉시 줄어들고 부기가 가라앉습니다 (2~3시간 지속).',
         dosingInfo: '필요시 2~3시간마다 1개씩 입안에서 천천히 녹여 복용 (하루 최대 12개). 깨물어 삼키지 마세요.',
         synergyWith: [
@@ -623,7 +739,7 @@
           { id: 'ibuprofen', reason: 'Benzydamine 트로키는 국소 작용 위주라 표준 용량의 경구 Ibuprofen과 단기 병용이 가능합니다.' }
         ],
         avoidWith: [
-          { id: 'amylmetacresol_lozenge', reason: '⚠️ [동일 부위 트로키 중복] Strepsils와 Difflam 사탕을 동시에 연속으로 녹여 먹으면 구강 점막 자극 및 국소마취제/소독제 과량이 될 수 있으므로 둘 중 하나만 선택하세요.' }
+          { id: 'amylmetacresol_lozenge', reason: '⚠️ [동일 부위 트로키 중복] Strepsils와 Difflam 사탕을 동시에 연속으로 녹여 먹으면 구강 점막 자극 및 소독제 과량이 될 수 있으므로 둘 중 하나만 선택하세요.' }
         ],
         warnings: '국소 마취 효과로 목이 얼얼할 때 너무 뜨거운 음료를 마시면 화상을 입을 수 있으니 복용 직후 뜨거운 음식은 피하세요.',
         healthifyUrl: 'https://www.unichem.co.nz/products/difflam-plus-anaesthetic-blackcurrant-lozenges-32s'
@@ -636,7 +752,7 @@
         drugClass: '구강·인후 국소 살균·진정제 (Oropharyngeal Antiseptic)',
         symptoms: ['sorethroat', 'drycough'],
         whenToUse: '목감기 초기 목이 칼칼하고 간질거리거나 가벼운 인후통이 시작될 때 목 점막을 촉촉하게 코팅하고 소독하기 위해 복용합니다.',
-        mechanism: '두 가지 국소 살균 성분(Amylmetacresol, Dichlorobenzyl alcohol)이 구강 및 인두 점막의 바이러스 외피와 세균 단백질을 변성시켜 번식을 억제하고, 트로키가 녹으면서 침 분비를 자극해 건조한 목 점막을 윤활 코팅합니다. 또한 일부 라인업은 나트륨 채널을 부분 차단해 가벼운 진통 효과를 줍니다.',
+        mechanism: '두 가지 국소 살균 성분이 구강 및 인두 점막의 바이러스 외피와 세균 단백질을 변성시켜 번식을 억제하고, 트로키가 녹으면서 침 분비를 자극해 건조한 목 점막을 윤활 코팅합니다.',
         expectedEffect: '복용 즉시 목의 건조함과 칼칼함이 진정되고 2시간가량 인후 살균·보습 효과가 유지됩니다.',
         dosingInfo: '성인 및 6세 이상: 2~3시간마다 1개씩 천천히 녹여 복용 (하루 최대 12개).',
         synergyWith: [
@@ -667,7 +783,7 @@
         avoidWith: [
           { id: 'ibuprofen', reason: '⚠️ 살리실산 계열 외용제이므로 과량 도포 시 경구 NSAID/아스피린과 중첩될 수 있으니 정량만 바르세요.' }
         ],
-        warnings: '🚨 살리실산(아스피린 계열) 성분이므로 레이 증후군(Reye\'s syndrome) 예방을 위해 16세 미만 어린이·청소년의 구내염에는 살리실산이 들어간 성인용 Bonjela 대신 어린이 전용(무살리실산) 제품을 사용해야 합니다.',
+        warnings: '🚨 16세 미만 어린이·청소년에게는 살리실산이 들어간 성인용 Bonjela 대신 어린이 전용(무살리실산) 제품을 사용해야 합니다.',
         healthifyUrl: 'https://www.unichem.co.nz/products/bonjela-analgesics-mouth-ulcer-gel-15g'
       },
       {
@@ -678,7 +794,7 @@
         drugClass: '비강 국소 알파-아드레날린 수용체 작용 혈관수축제',
         symptoms: ['blockednose', 'runnynose'],
         whenToUse: '감기, 부비동염(축농증), 급성 비염으로 코가 꽉 막혀 숨쉬기 힘들거나 밤에 잠을 못 잘 때 가장 빠르고 확실하게 코를 뚫어주는 스프레이입니다.',
-        mechanism: '코점막의 알파-1 및 알파-2 아드레날린 수용체(α-adrenergic receptors)를 직접 자극하여 부어오른 코점막 미세혈관을 즉시 수축시킵니다. 혈관이 수축되면서 코점막 부종이 빠지고 비강 공기 통로가 넓어집니다. (Otrivin Plus 제품은 콧물 분비를 멈추는 항콜린 성분 Ipratropium이 함께 들어 있어 코막힘+물콧물을 동시에 잡습니다.)',
+        mechanism: '코점막의 알파-아드레날린 수용체를 직접 자극하여 부어오른 코점막 미세혈관을 즉시 수축시킵니다. 혈관이 수축되면서 코점막 부종이 빠지고 비강 공기 통로가 넓어집니다.',
         expectedEffect: '뿌린 후 2~5분 이내에 막힌 코가 시원하게 뚫리며, 8~12시간 동안 호흡이 편안해집니다.',
         dosingInfo: '성인 기준 하루 2~3회, 양쪽 콧구멍에 1번씩 분사. 🚨 반드시 최대 3~5일까지만 연속 사용하고 중단하세요!',
         synergyWith: [
@@ -687,9 +803,10 @@
           { id: 'saline_nasal', reason: '식염수 스프레이(Fess)로 코안의 끈적한 점액을 먼저 씻어낸 뒤 뿌리면 약물 흡수율이 훨씬 높아집니다.' }
         ],
         avoidWith: [
-          { id: 'cold_combo_pe', reason: '⚠️ [교감신경 혈관수축제 중복 주의] 먹는 코막힘 약(Phenylephrine 또는 Pseudoephedrine이 든 Lemsip, Codral, Sudafed)과 동시에 과량 사용하면 혈압 상승, 심장 두근거림, 불면증이 나타날 수 있습니다.' }
+          { id: 'cold_combo_pe', reason: '⚠️ [교감신경 혈관수축제 중복 주의] 먹는 코막힘 약(Lemsip, Codral, Sudafed)과 동시에 과량 사용하면 혈압 상승, 두근거림, 불면증이 나타날 수 있습니다.' },
+          { id: 'nasal_moist_oil', reason: '⚠️ 코안이 헐어 피가 나거나 딱지가 심할 때는 혈관수축제(Otrivin)가 점막 건조와 출혈을 악화시킬 수 있으므로 보습 오일/식염수를 우선 사용하세요.' }
         ],
-        warnings: '🚨 5~7일 이상 연속 사용하면 약물성 비염(Rebound congestion, 약효가 떨어질 때 코점막이 전보다 더 심하게 붓는 현상)이 발생합니다. 장기 비염에는 반드시 스테로이드 스프레이(Flixonase 등)를 쓰세요.',
+        warnings: '🚨 5~7일 이상 연속 사용하면 약물성 비염(Rebound congestion)이 발생합니다. 장기 비염에는 스테로이드 스프레이(Flixonase 등)를 쓰세요.',
         healthifyUrl: 'https://www.unichem.co.nz/products/otrivin-adult-nasal-spray-10ml'
       },
       {
@@ -700,39 +817,20 @@
         drugClass: '해열진통 + 교감신경 비충혈제거 + 거담/항히스타민 종합감기약',
         symptoms: ['fever', 'headache', 'bodyache', 'blockednose', 'runnynose', 'sorethroat', 'chesty'],
         whenToUse: '열, 두통, 오한, 코막힘, 목 아픔, 가래 등 여러 감기 증상이 한꺼번에 나타났을 때 따뜻한 차 형태(Lemsip)나 캡슐(Codral, Maxigesic PE) 하나로 통합 관리할 때 씁니다.',
-        mechanism: '① Paracetamol이 중추신경계에서 열과 몸살 통증을 잡고, ② Phenylephrine(알파-1 교감신경 효능제)이 전신 혈류를 통해 부은 코점막 혈관을 수축시켜 코막힘을 줄이며, ③ Mucus 라인업에 포함된 Guaifenesin이 기관지 점액 수분을 늘려 가래 배출을 돕습니다. Night(야간용) 알약에는 수면을 돕고 콧물을 말리는 1세대 항히스타민제(Chlorpheniramine 등)가 추가됩니다.',
+        mechanism: '① Paracetamol이 중추신경계에서 열과 몸살 통증을 잡고, ② Phenylephrine이 부은 코점막 혈관을 수축시켜 코막힘을 줄이며, ③ Mucus 라인업에 포함된 Guaifenesin이 기관지 점액 수분을 늘려 가래 배출을 돕습니다.',
         expectedEffect: '복용 후 30~45분 내 발열·두통·몸살이 가라앉고 코감기 증상이 완화됩니다.',
         dosingInfo: '성인 기준 4~6시간마다 1회분 복용 (하루 최대 4회). Night 정제는 졸음을 유발하므로 취침 전에만 복용.',
         synergyWith: [
-          { id: 'ibuprofen', reason: 'Paracetamol 기반 종합감기약(Lemsip, Codral)을 복용 중에도 목 염증이나 몸살이 심하면 다른 기전인 단일 Ibuprofen(Nurofen)을 교차/병용할 수 있습니다 (단, Maxigesic PE는 이미 Ibuprofen이 들어 있으므로 제외!).' },
+          { id: 'ibuprofen', reason: 'Paracetamol 기반 종합감기약(Lemsip, Codral)을 복용 중에도 목 염증이나 몸살이 심하면 다른 기전인 단일 Ibuprofen(Nurofen)을 교차/병용할 수 있습니다.' },
           { id: 'benzydamine_lozenge', reason: '먹는 종합감기약과 목 국소 소염/마취 트로키(Difflam)는 기전이 달라 함께 쓸 수 있습니다.' }
         ],
         avoidWith: [
-          { id: 'paracetamol', reason: '🚨 [절대 금기: Paracetamol 과량 복용 위험] Lemsip, Codral, Maxigesic PE에는 이미 Paracetamol이 고함량(500~1000mg) 들어 있습니다! Panadol을 추가로 먹으면 간 손상 위험이 매우 큽니다.' },
+          { id: 'paracetamol', reason: '🚨 [절대 금기: Paracetamol 과량 복용 위험] Lemsip, Codral에는 이미 Paracetamol이 고함량(500~1000mg) 들어 있습니다! Panadol을 추가로 먹으면 간 손상 위험이 매우 큽니다.' },
           { id: 'maxigesic_combo', reason: '🚨 [절대 금기: 성분 중복] Maxigesic과 함께 복용하면 Paracetamol이 2배로 중복됩니다.' },
           { id: 'xylometazoline', reason: '⚠️ 먹는 코막힘 성분(Phenylephrine)과 코막힘 스프레이를 동시에 쓰면 혈압 상승이나 맥박 증가가 올 수 있으니 주의하세요.' }
         ],
-        warnings: '고혈압, 갑상선기능항진증, 심장질환 환자는 Phenylephrine/Pseudoephedrine 성분이 혈압을 올릴 수 있으므로 약사와 상담하세요.',
+        warnings: '고혈압, 갑상선기능항진증, 심장질환 환자는 Phenylephrine 성분이 혈압을 올릴 수 있으므로 약사와 상담하세요.',
         healthifyUrl: 'https://www.unichem.co.nz/products/codral-cold-flu-mucus-cough-capsules-24s'
-      },
-      {
-        id: 'saline_nasal',
-        nameKo: '생리식염수 비강 세척 스프레이',
-        nameEn: 'Isotonic / Hypertonic Saline Nasal Spray (Sodium Chloride)',
-        category: 'cold',
-        drugClass: '비약물성 점막 보습·점액 세척제 (Non-medicated Saline Wash)',
-        symptoms: ['blockednose', 'runnynose', 'sneezing'],
-        whenToUse: '코안이 건조하고 딱지가 생기거나, 끈적한 콧물·꽃가루·먼지를 부작용 걱정 없이 씻어내고 싶을 때(영유아, 임산부, 고혈압 환자 포함 누구나 매일 사용 가능) 씁니다.',
-        mechanism: '삼투압과 물리적 세척 작용을 통해 비강 점막의 점액섬모 운동(Mucociliary clearance)을 회복시키고, 코점막 표면에 붙은 알레르기 유발 물질(꽃가루, 집먼지진드기)과 끈적한 화농성 코딱지를 묽게 만들어 배출시킵니다.',
-        expectedEffect: '분사 즉시 코안이 촉촉해지고 막힌 콧물 배출이 쉬워집니다. 약물 내성이 전혀 없어 매일 수시로 사용 가능합니다.',
-        dosingInfo: '하루 수회 필요할 때마다 양쪽 코에 분사 후 가볍게 코를 풀어냅니다.',
-        synergyWith: [
-          { id: 'fluticasone_nasal', reason: '비염 스테로이드 스프레이(Flixonase)나 코막힘 스프레이(Otrivin)를 뿌리기 5~10분 전에 식염수로 코안을 먼저 씻어내면 약물이 점막에 직접 닿아 효과가 훨씬 좋아집니다.' },
-          { id: 'xylometazoline', reason: '약물 스프레이 사용 횟수를 줄여 약물성 비염 예방을 돕습니다.' }
-        ],
-        avoidWith: [],
-        warnings: '다른 모든 감기약·비염약과 안전하게 병용할 수 있습니다.',
-        healthifyUrl: 'https://www.unichem.co.nz/products/fess-nasal-spray-30ml'
       },
       {
         id: 'dextromethorphan',
@@ -742,7 +840,7 @@
         drugClass: '중추성 비마약성 진해제 (Central Cough Reflex Suppressant)',
         symptoms: ['drycough'],
         whenToUse: '가래는 없는데 목이 간질거리면서 발작적으로 계속 나오는 "마른기침(Dry, tickly cough)" 때문에 밤에 잠을 못 자거나 목이 쉴 때 기침 반사 자체를 멈추기 위해 복용합니다.',
-        mechanism: '뇌의 연수(Medulla oblongata)에 위치한 기침 중추(Cough centre)의 시그마-1 수용체 및 NMDA 수용체에 작용하여 기침 반사 역치를 높입니다. 즉, 목의 사소한 자극에도 뇌가 기침 명령을 내리는 과민 반응을 직접 진정시킵니다. (참고: 과거 뉴질랜드에서 쓰이던 Pholcodine 기침약은 2023년 Medsafe에 의해 전량 판매 중단되었으며 현재는 Dextromethorphan이 표준입니다.)',
+        mechanism: '뇌의 연수에 위치한 기침 중추(Cough centre)에 작용하여 기침 반사 역치를 높입니다. 즉, 목의 사소한 자극에도 뇌가 기침 명령을 내리는 과민 반응을 직접 진정시킵니다.',
         expectedEffect: '복용 후 30분 내 발작적인 마른기침 빈도가 줄어들고 최대 6~8시간 기침 억제 효과가 지속됩니다.',
         dosingInfo: '성인 기준 6~8시간마다 제품 표시 용량(보통 10~15ml) 복용.',
         synergyWith: [
@@ -750,9 +848,9 @@
           { id: 'amylmetacresol_lozenge', reason: '목 점막의 간질거림을 코팅하는 목캔디(Strepsils)와 함께 쓰면 말초 자극+중추 기침 반사를 동시에 잡습니다.' }
         ],
         avoidWith: [
-          { id: 'bromhexine_guaifenesin', reason: '⚠️ [기전 상충 주의] 가래가 많이 끓는 기침(Chesty cough)에 기침 억제제(Dextromethorphan)를 강하게 쓰면, 묽어진 가래가 밖으로 배출되지 못하고 기관지에 고일 수 있습니다. 가래기침에는 거담제를, 마른기침에는 진해제를 구분해서 쓰세요.' }
+          { id: 'bromhexine_guaifenesin', reason: '⚠️ [기전 상충 주의] 가래가 많이 끓는 기침(Chesty cough)에 기침 억제제를 강하게 쓰면, 묽어진 가래가 밖으로 배출되지 못하고 기관지에 고일 수 있습니다.' }
         ],
-        warnings: '🚨 우울증 치료제(SSRI, SNRIs, MAOI 등 항우울제)를 복용 중인 분은 Dextromethorphan과 함께 복용 시 세로토닌 증후군(Serotonin syndrome) 위험이 있으므로 절대 병용하지 말고 약사에게 알리세요.',
+        warnings: '🚨 항우울제(SSRI, SNRI, MAOI 등)를 복용 중인 분은 세로토닌 증후군 위험이 있으므로 절대 병용하지 말고 약사에게 알리세요.',
         healthifyUrl: 'https://www.unichem.co.nz/products/duro-tuss-dry-cough-liquid-forte-200ml'
       },
       {
@@ -763,7 +861,7 @@
         drugClass: '점액용해제 + 거담제 (Mucolytic & Expectorant)',
         symptoms: ['chesty'],
         whenToUse: '가슴 깊은 곳에서 그르렁거리고 목에 끈적하게 달라붙어 잘 뱉어지지 않는 "가래기침(Chesty / Mucus cough)"을 묽게 녹여 시원하게 배출시키고 싶을 때 복용합니다.',
-        mechanism: '두 성분이 서로 다른 기전으로 가래를 공략합니다. ① Bromhexine(점액용해제)은 끈적한 가래(점액) 내부의 산성 뮤코다당류 섬유 사슬을 화학적으로 잘게 끊어내어 가래의 점도를 낮추고 기관지 섬모 운동을 촉진합니다. ② Guaifenesin(거담제)은 위점막 미주신경 반사를 통해 호흡기 분비선의 수분 분비를 늘려 가래의 부피를 묽게 만들고 가래가 기도 벽에서 쉽게 떨어져 나오게 합니다.',
+        mechanism: '① Bromhexine(점액용해제)은 끈적한 가래 내부의 점액 섬유 사슬을 화학적으로 잘게 끊어내어 점도를 낮추고, ② Guaifenesin(거담제)은 호흡기 수분 분비를 늘려 가래가 기도 벽에서 쉽게 떨어져 나오게 합니다.',
         expectedEffect: '복용 후 1~2시간 내 가슴의 답답함이 줄고 끈적하던 가래가 묽어져 가벼운 기침만으로도 쉽게 배출됩니다.',
         dosingInfo: '성인 기준 하루 3회(8시간 간격) 정해진 시럽 용량 복용. 따뜻한 물을 충분히 마시면 가래 묽힘 효과가 배가됩니다.',
         synergyWith: [
@@ -773,7 +871,7 @@
         ],
         avoidWith: [
           { id: 'dextromethorphan', reason: '⚠️ 가래를 녹여 뱉어내야 하는 시점에 강한 마른기침 억제제를 동시에 복용하면 가래 배출이 방해될 수 있습니다.' },
-          { id: 'cold_combo_pe', reason: '⚠️ Codral Mucus나 Lemsip Mucus 같은 종합감기약에 이미 Guaifenesin이나 Bromhexine이 들어 있는지 확인해 중복을 피하세요.' }
+          { id: 'cold_combo_pe', reason: '⚠️ Codral Mucus나 Lemsip Mucus 같은 종합감기약에 이미 Guaifenesin이 들어 있는지 확인해 중복을 피하세요.' }
         ],
         warnings: '충분한 수분(따뜻한 물) 섭취가 약효 발현에 매우 중요합니다.',
         healthifyUrl: 'https://www.unichem.co.nz/products/duro-tuss-chesty-double-strength-200ml'
@@ -785,19 +883,19 @@
         category: 'allergy',
         drugClass: '말초 선택적 H1 히스타민 수용체 길항제 (Non-sedating H1 Antihistamine)',
         symptoms: ['sneezing', 'runnynose', 'itchyeyes', 'hives_eczema'],
-        whenToUse: '뉴질랜드 봄·여름철 꽃가루 알레르기(Hayfever), 집먼지진드기 비염으로 재채기·맑은 콧물·눈/코 가려움이 날 때, 또는 음식/벌레/접촉에 의한 두드러기와 피부 가려움증을 하루 한 알로 가라앉힐 때 복용합니다.',
-        mechanism: '알레르기 유발 물질이 들어왔을 때 비만세포(Mast cell)에서 분비된 히스타민이 혈관과 신경의 H1 수용체에 결합하는 것을 선택적으로 차단합니다. 1세대 항히스타민제와 달리 뇌혈관장벽(BBB)을 거의 통과하지 않아 졸음 부작용이 적으면서 혈관 확장, 콧물 분비, 신경 가려움 신호를 차단합니다. (특징 비교: Fexofenadine[Telfast]은 뇌 투과가 거의 0%라 가장 안 졸리고, Cetirizine[Zyrtec/Razene]은 약효 발현이 가장 빠르고 두드러기/가려움에 강하며, Loratadine[Claratyne]은 무난하고 졸음이 적습니다.)',
+        whenToUse: '꽃가루 알레르기(Hayfever), 집먼지진드기 비염으로 재채기·맑은 콧물·눈/코 가려움이 날 때, 또는 두드러기와 피부 가려움증을 하루 한 알로 가라앉힐 때 복용합니다.',
+        mechanism: '알레르기 유발 물질이 들어왔을 때 분비된 히스타민이 혈관과 신경의 H1 수용체에 결합하는 것을 선택적으로 차단합니다. 뇌혈관장벽을 거의 통과하지 않아 졸음 부작용이 적습니다 (Fexofenadine[Telfast]이 가장 안 졸리고, Cetirizine[Zyrtec/Razene]은 효과가 가장 빠름).',
         expectedEffect: '복용 후 30~60분 내 재채기, 맑은 콧물, 눈/피부 가려움 및 두드러기가 가라앉으며 24시간 지속됩니다.',
         dosingInfo: '성인 기준 하루 1회 1정 복용 (Cetirizine 10mg, Loratadine 10mg, Fexofenadine 120mg~180mg).',
         synergyWith: [
           { id: 'fluticasone_nasal', reason: '🌟 [알레르기 비염 골드 스탠다드 조합] 먹는 항히스타민제(즉각적인 재채기·가려움 차단)와 코에 뿌리는 스테로이드 스프레이(Flixonase 등, 코점막 염증·코막힘 근본 억제)는 기전이 상호보완적이어서 함께 쓰면 중증 비염에 최상의 시너지를 냅니다.' },
-          { id: 'ketotifen_eye', reason: '눈 가려움이 심할 때 먹는 알레르기약과 점안용 항히스타민 안약(Zaditen/Lomide)을 함께 사용할 수 있습니다.' },
+          { id: 'ketotifen_eye', reason: '눈 가려움이 심할 때 먹는 알레르기약과 점안용 항히스타민 안약(Zaditen)을 함께 사용할 수 있습니다.' },
           { id: 'hydrocortisone_topical', reason: '심한 피부 두드러기·벌레물림 시 먹는 항히스타민제와 바르는 스테로이드 크림을 병용하면 안팎으로 가려움과 염증을 빠르게 잡습니다.' }
         ],
         avoidWith: [
-          { id: 'meclozine', reason: '🚨 [항히스타민 중복 주의] Zyrtec, Claratyne, Telfast를 서로 섞어 복용하거나, 멀미약(Sea-Legs) 및 야간용 종합감기약(Night)에 든 1세대 항히스타민제와 동시에 복용하면 구강 건조, 어지러움, 심한 졸음이 나타납니다.' }
+          { id: 'meclozine', reason: '🚨 [항히스타민 중복 주의] Zyrtec, Claratyne, Telfast를 서로 섞어 복용하거나, 멀미약(Sea-Legs) 및 야간용 종합감기약에 든 1세대 항히스타민제와 동시에 복용하면 심한 졸음과 입마름이 나타납니다.' }
         ],
-        warnings: 'Fexofenadine(Telfast)은 오렌지·자몽·사과 주스와 함께 복용하면 장내 흡수 수송체(OATP)가 차단되어 약효가 떨어지므로 반드시 물과 함께 드세요.',
+        warnings: 'Fexofenadine(Telfast)은 과일 주스와 함께 복용하면 흡수율이 떨어지므로 반드시 물과 함께 드세요.',
         healthifyUrl: 'https://www.unichem.co.nz/products/telfast-tablets-180mg-30s'
       },
       {
@@ -807,16 +905,16 @@
         category: 'allergy',
         drugClass: '비강 국소 코르티코스테로이드 항염증제 (Intranasal Corticosteroid)',
         symptoms: ['sneezing', 'blockednose', 'runnynose', 'itchyeyes'],
-        whenToUse: '꽃가루 알레르기(Hayfever)나 연중 비염으로 코막힘, 재채기, 콧물이 수주 이상 계속될 때 가장 효과적인 1차 예방·치료 스프레이입니다. Otrivin과 달리 약물성 비염 없이 장기간 매일 사용할 수 있습니다.',
-        mechanism: '코점막 세포 내 글루코코르티코이드 수용체에 결합하여 히스타민, 류코트리엔, 프로스타글란딘 등 알레르기 염증 매개체 전반과 호산구/비만세포 유입을 뿌리부터 차단합니다. (특히 Dymista는 스테로이드인 Fluticasone에 국소 항히스타민제인 Azelastine을 결합해 뿌린 지 5~15분 만에 즉각적인 효과와 장기 염증 억제를 동시에 발휘합니다.)',
-        expectedEffect: '단독 스테로이드(Flixonase/BecloClear)는 첫날부터 완화되기 시작해 3~4일 꾸준히 뿌리면 최고 효과에 도달하며, 코막힘·콧물·재채기를 24시간 예방합니다.',
-        dosingInfo: 'Flixonase 기준 하루 1회 아침에 각 콧구멍에 2회 분사 (증상 호전 시 1회로 감량). 코 가운데 벽(비중격)이 아닌 바깥쪽(눈꼬리 방향)을 향해 뿌리세요.',
+        whenToUse: '꽃가루 알레르기(Hayfever)나 연중 비염으로 코막힘, 재채기, 콧물이 수주 이상 계속될 때 가장 효과적인 1차 예방·치료 스프레이입니다.',
+        mechanism: '코점막 세포 내 수용체에 결합하여 히스타민, 류코트리엔 등 알레르기 염증 매개체 전반을 뿌리부터 차단합니다. (Dymista는 스테로이드에 항히스타민제 Azelastine을 결합해 5~15분 만에 즉각적인 효과를 발휘합니다.)',
+        expectedEffect: '첫날부터 완화되기 시작해 3~4일 꾸준히 뿌리면 최고 효과에 도달하며, 코막힘·콧물·재채기를 24시간 예방합니다.',
+        dosingInfo: '하루 1회 아침에 각 콧구멍에 1~2회 분사. 코 가운데 벽(비중격)이 아닌 바깥쪽(눈꼬리 방향)을 향해 뿌리세요.',
         synergyWith: [
           { id: 'cetirizine', reason: '스테로이드 스프레이가 최대 효과를 내기 전이나 전신 가려움이 동반될 때 먹는 항히스타민제(Zyrtec/Telfast)와 함께 쓰면 완벽한 상호보완 효과를 냅니다.' },
-          { id: 'saline_nasal', reason: '식염수 스프레이(Fess)로 코를 세척한 뒤 뿌리면 스테로이드가 코점막에 고르게 밀착됩니다.' }
+          { id: 'saline_nasal', reason: '식염수 스프레이(Fess/Flo)로 코를 세척한 뒤 뿌리면 스테로이드가 코점막에 고르게 밀착됩니다.' }
         ],
         avoidWith: [],
-        warnings: 'Otrivin 같은 혈관수축제와 달리 증상이 당장 없는 날에도 꽃가루 시즌 동안 꾸준히 뿌려야 염증이 재발하지 않습니다.',
+        warnings: '⚠️ 코 가운데 벽(비중격)에 직접 대고 뿌리면 코안이 헐거나 코피가 날 수 있으니 반드시 코 바깥쪽 방향으로 분사하세요.',
         healthifyUrl: 'https://www.unichem.co.nz/products/flixonase-nasal-spray-120-dose-120s'
       },
       {
@@ -827,15 +925,15 @@
         drugClass: '안구 국소 항히스타민 + 비만세포 안정화 이중 작용 점안액',
         symptoms: ['itchyeyes', 'sneezing'],
         whenToUse: '꽃가루나 반려동물 털, 먼지로 인해 눈이 미칠 듯이 가렵고 충혈되며 눈물이 날 때(알레르기성 결막염) 눈에 직접 넣는 안약입니다.',
-        mechanism: 'Zaditen(Ketotifen)은 ① 안구 결막의 H1 히스타민 수용체를 즉각 차단하여 가려움을 멈추고, ② 비만세포(Mast cell) 막을 안정화하여 알레르기 물질이 닿아도 히스타민이 추가로 터져 나오지 못하게 막으며, ③ 호산구 침윤을 억제하는 3중 기전을 가집니다.',
+        mechanism: '① 안구 결막의 H1 히스타민 수용체를 즉각 차단하여 가려움을 멈추고, ② 비만세포 막을 안정화하여 히스타민이 추가로 터져 나오지 못하게 막는 이중 기전을 가집니다.',
         expectedEffect: '점안 후 수분 내 눈의 심한 가려움과 충혈, 눈물 흘림이 가라앉으며 최대 12시간 지속됩니다.',
-        dosingInfo: '성인 및 어린이: 하루 2회(아침·저녁) 양쪽 눈에 1방울씩 점안. (1회용 무보존제 단회용 제품은 개봉 후 즉시 사용)',
+        dosingInfo: '하루 2회(아침·저녁) 양쪽 눈에 1방울씩 점안.',
         synergyWith: [
-          { id: 'fluticasone_nasal', reason: '코 증상을 잡는 비염 스프레이(Flixonase)와 눈 가려움을 잡는 점안액(Zaditen)을 함께 쓰면 코-눈 알레르기를 완벽히 해결합니다.' },
+          { id: 'fluticasone_nasal', reason: '코 증상을 잡는 비염 스프레이(Flixonase)와 눈 가려움을 잡는 점안액(Zaditen)을 함께 쓰면 코-눈 알레르기를 동시에 해결합니다.' },
           { id: 'cetirizine', reason: '점안 국소 작용이므로 먹는 알레르기약과도 병용 가능합니다.' }
         ],
         avoidWith: [],
-        warnings: '콘택트렌즈 착용자는 점안 전 렌즈를 빼고, 점안 후 최소 15분 뒤에 렌즈를 착용하세요 (무보존제 1회용 제품도 동일 권장).',
+        warnings: '콘택트렌즈 착용자는 점안 전 렌즈를 빼고, 점안 후 최소 15분 뒤에 렌즈를 착용하세요.',
         healthifyUrl: 'https://www.unichem.co.nz/products/zaditen-allergy-sterile-eye-drops-0-4ml-singles-20pk'
       },
       {
@@ -846,15 +944,15 @@
         drugClass: '위산 역류 물리적 방어막 형성제 + 속효성 제산제 (Alginate Raft + Antacid)',
         symptoms: ['heartburn', 'indigestion'],
         whenToUse: '식후나 밤에 누웠을 때 신물이 올라오고 가슴이 타는 듯이 쓰린 "위산 역류(Reflux / Heartburn)"와 급성 속쓰림에 가장 빠르게 효과를 보는 약입니다.',
-        mechanism: '두 가지 기전이 동시에 작동합니다(Dual Action). ① 탄산칼슘·중탄산나트륨(제산제)이 위 속의 과도한 위산(HCl)을 즉시 화학적으로 중화시켜 속쓰림을 끕니다. ② 해조류 유래 성분인 Sodium Alginate(알긴산)가 위산과 만나는 순간 쫀쫀한 겔 형태의 뗏목(Neutral floating raft)으로 변해 위 내용물 맨 위 표면에 둥둥 떠서 식도로 위산이 역류하는 것을 물리적으로 막아줍니다.',
+        mechanism: '① 탄산칼슘·중탄산나트륨(제산제)이 위 속의 과도한 위산을 즉시 중화시켜 속쓰림을 끕니다. ② 해조류 유래 성분인 Sodium Alginate(알긴산)가 위산과 만나는 순간 쫀쫀한 겔 형태의 뗏목(Raft)으로 변해 위 내용물 맨 위에 떠서 식도로 신물이 역류하는 것을 물리적으로 막아줍니다.',
         expectedEffect: '복용 후 3~5분 이내에 가슴 쓰림과 신물 역류가 진정되며, 최대 4시간 동안 물리적 방어막이 유지됩니다.',
         dosingInfo: '식후 및 취침 직전에 씹어 먹는 정제(2~4정 충분히 씹은 후 물 섭취) 또는 현탁액 복용.',
         synergyWith: [
-          { id: 'omeprazole', reason: '🌟 [역류성 식도염 최강 조합] 위산 생성 자체를 줄이는 Omeprazole(Losec, 아침 공복 복용, 효과 발현에 1~2일 소요)과 이미 나온 위산 역류를 막는 Gaviscon(식후·취침 전 복용, 3분 내 즉효)은 기전이 완전히 달라 함께 쓰면 낮과 밤 모두 완벽히 커버됩니다.' },
+          { id: 'omeprazole', reason: '🌟 [역류성 식도염 최강 조합] 위산 생성 자체를 줄이는 Omeprazole(Losec, 아침 공복 복용)과 이미 나온 위산 역류를 막는 Gaviscon(식후·취침 전 복용, 3분 내 즉효)은 기전이 완전히 달라 함께 쓰면 낮과 밤 모두 완벽히 커버됩니다.' },
           { id: 'simethicone', reason: '속쓰림과 가스/복부 팽만감이 동시에 있을 때 함께 사용할 수 있습니다.' }
         ],
         avoidWith: [],
-        warnings: '⚠️ 알긴산 방어막과 칼슘/나트륨 성분이 다른 경구 약물의 흡수를 방해할 수 있으므로, 다른 알약(항생제, 철분제, 갑상선약 등)을 복용할 때는 최소 2시간 간격을 두세요!',
+        warnings: '⚠️ 알긴산 방어막이 다른 경구 약물의 흡수를 방해할 수 있으므로, 다른 알약을 복용할 때는 최소 2시간 간격을 두세요!',
         healthifyUrl: 'https://www.unichem.co.nz/products/gaviscon-dual-action-peppermint-tablets-16s'
       },
       {
@@ -865,15 +963,15 @@
         drugClass: '위벽세포 양성자 펌프 억제제 (Proton Pump Inhibitor)',
         symptoms: ['heartburn', 'indigestion'],
         whenToUse: '일주일에 2회 이상 반복되는 잦은 속쓰림, 만성 위산 역류, 역류성 식도염이나 소염진통제 복용으로 인한 위염 증상에 위산 분비 자체를 24시간 근본적으로 차단할 때 복용합니다.',
-        mechanism: '위산 중화가 아니라 위벽세포(Parietal cell)에서 위산(H+)을 위장 내로 뿜어내는 최종 관문인 수소-칼륨 ATPase(양성자 펌프, H+/K+ ATPase)를 비가역적으로 차단하여 기저 위산 및 식사 자극 위산 분비를 80~90% 이상 억제합니다.',
+        mechanism: '위산 중화가 아니라 위벽세포에서 위산을 뿜어내는 최종 관문인 양성자 펌프(H+/K+ ATPase)를 비가역적으로 차단하여 위산 분비를 80~90% 이상 억제합니다.',
         expectedEffect: '복용 후 1~2시간부터 위산 분비가 줄어들며, 2~4일 연속 복용 시 위점막이 치유되면서 하루 종일 속쓰림 없는 상태가 유지됩니다.',
-        dosingInfo: '아침 식사 30분 전 공복에 하루 1회 1정(20mg)을 물과 함께 통째로 삼켜 복용 (장용 코팅이 되어 있으므로 쪼개거나 씹지 마세요).',
+        dosingInfo: '아침 식사 30분 전 공복에 하루 1회 1정(20mg)을 물과 함께 통째로 삼켜 복용.',
         synergyWith: [
           { id: 'alginate_antacid', reason: 'Omeprazole이 완전히 작용하기 전 첫 1~2일 동안이나 야간 돌발 속쓰림에 Gaviscon을 식후/취침 전 추가로 쓰면 즉각적 완화와 근본 억제를 동시에 얻습니다.' },
           { id: 'ibuprofen', reason: '소염진통제(Nurofen, Voltaren) 복용 시 위점막 손상을 예방해 줍니다.' }
         ],
         avoidWith: [],
-        warnings: '14일 이상 복용해도 속쓰림이 계속되거나 삼킴 곤란, 체중 감소, 흑색변이 있으면 반드시 의사의 진료를 받으세요.',
+        warnings: '14일 이상 복용해도 속쓰림이 계속되면 의사의 진료를 받으세요.',
         healthifyUrl: 'https://www.unichem.co.nz/products/losec-extra-tablets-20mg-14s'
       },
       {
@@ -883,19 +981,19 @@
         category: 'gastro',
         drugClass: '위장관 평활근 항콜린성 진경제 (Antimuscarinic Antispasmodic)',
         symptoms: ['cramps', 'tooth_period'],
-        whenToUse: '일반 진통제로는 잘 안 듣는 "배가 쥐어짜듯 비틀리고 아픈 위경련·장경련(Stomach cramps)", 과민성 대장증후군(IBS) 복통, 급성 장염 배앓이, 또는 자궁 평활근 수축으로 인한 생리통에 사용합니다.',
-        mechanism: '위장관 및 비뇨생식기 벽의 평활근에 있는 무스카린성 아세틸콜린 수용체(Muscarinic receptors)를 차단합니다. 부교감신경의 과도한 수축 신호를 끊어 경련을 일으키며 뭉쳐 있던 위와 장 근육을 부드럽게 이완시킵니다. 사차 암모늄 구조라 뇌혈관장벽을 통과하지 않아 중추 신경 부작용이 적습니다.',
+        whenToUse: '일반 진통제로는 잘 안 듣는 "배가 쥐어짜듯 비틀리고 아픈 위경련·장경련(Stomach cramps)", 과민성 대장증후군(IBS) 복통, 급성 장염 배앓이, 또는 자궁 수축 생리통에 사용합니다.',
+        mechanism: '위장관 벽의 평활근에 있는 무스카린성 아세틸콜린 수용체를 차단하여 과도한 수축 신호를 끊고 뭉쳐 있던 위와 장 근육을 부드럽게 이완시킵니다.',
         expectedEffect: '복용 후 15~30분 내 쥐어짜는 듯한 배앓이와 복부 경련 통증이 빠르게 풀립니다.',
-        dosingInfo: 'Buscopan Forte(20mg) 기준 성인 1회 1정, 하루 최대 4회 복용 (뉴질랜드 약국에서 약사 상담 또는 카운터 구매).',
+        dosingInfo: 'Buscopan Forte(20mg) 기준 성인 1회 1정, 하루 최대 4회 복용.',
         synergyWith: [
           { id: 'paracetamol', reason: '장 근육 경련을 풀어주는 Buscopan과 통증 신호를 차단하는 Paracetamol은 기전이 달라 심한 복통·생리통에 함께 복용하면 시너지가 뛰어납니다.' },
-          { id: 'loperamide', reason: '급성 물설사와 쥐어짜는 배앓이가 동시에 있을 때 Imodium(설사 멈춤) + Buscopan(장 경련 완화)을 병용하거나 복합제(Imodium Advanced 등)로 복용할 수 있습니다.' },
+          { id: 'loperamide', reason: '급성 물설사와 쥐어짜는 배앓이가 동시에 있을 때 Imodium(설사 멈춤) + Buscopan(장 경련 완화)을 병용할 수 있습니다.' },
           { id: 'simethicone', reason: '가스로 인해 장이 부풀며 꼬이는 복통에 가스제거제(De-Gas)와 진경제(Buscopan)를 함께 쓰면 매우 효과적입니다.' }
         ],
         avoidWith: [
-          { id: 'meclozine', reason: '⚠️ [항콜린 부작용 가중] 1세대 항히스타민제(멀미약 Sea-Legs, 수면유도제, 야간 감기약)와 함께 복용 시 입마름, 변비, 시야 흐림, 배뇨 곤란 등 항콜린 부작용이 강해질 수 있습니다.' }
+          { id: 'meclozine', reason: '⚠️ [항콜린 부작용 가중] 멀미약(Sea-Legs)이나 1세대 항히스타민제와 함께 복용 시 입마름, 변비, 시야 흐림 등 항콜린 부작용이 강해질 수 있습니다.' }
         ],
-        warnings: '녹내장, 전립선 비대증으로 인한 배뇨 장애, 중증 근무력증 환자는 복용 금기.',
+        warnings: '녹내장, 전립선 비대증으로 인한 배뇨 장애 환자는 복용 금기.',
         healthifyUrl: 'https://www.unichem.co.nz/products/buscopan-forte-tab-20mg-10s-pharmacist-only-medicine'
       },
       {
@@ -906,9 +1004,9 @@
         drugClass: '장관 뮤(μ)-오피오이드 수용체 작용 장운동 억제제',
         symptoms: ['diarrhoea'],
         whenToUse: '갑작스러운 물설사, 여행자 설사, 과민성 대장 설사로 외출이나 일상생활이 힘들 때 장운동을 빠르게 진정시켜 설사를 멈추게 합니다.',
-        mechanism: '뇌로는 들어가지 않고 장벽(장관 신경총)의 μ-오피오이드 수용체에만 직접 결합하여 아세틸콜린과 프로스타글란딘 방출을 억제합니다. 이를 통해 과도하게 빨라진 장의 연동운동(Peristalsis)을 늦추고, 장내 수분과 전해질이 몸으로 다시 흡수될 시간을 벌어주며 항문 괄약근 긴장도를 높입니다.',
+        mechanism: '뇌로는 들어가지 않고 장벽의 μ-오피오이드 수용체에만 직접 결합하여 과도하게 빨라진 장의 연동운동을 늦추고, 장내 수분과 전해질이 몸으로 다시 흡수될 시간을 벌어줍니다.',
         expectedEffect: '복용 후 1시간 이내에 장의 꾸르륵거림과 설사 빈도가 현저히 줄어듭니다.',
-        dosingInfo: '성인 기준 첫 설사 시 2캡슐(4mg) 복용 후, 이후 묽은 변을 볼 때마다 1캡슐(2mg)씩 추가 복용 (하루 최대 8캡슐/16mg 이내).',
+        dosingInfo: '성인 기준 첫 설사 시 2캡슐(4mg) 복용 후, 이후 묽은 변을 볼 때마다 1캡슐(2mg)씩 추가 복용 (하루 최대 8캡슐 이내).',
         synergyWith: [
           { id: 'oral_rehydration', reason: '🌟 [설사 치료 필수 짝꿍] Imodium이 장운동을 늦추는 동안 이미 빠져나간 수분과 전해질을 Hydralyte(경구수액제)로 보충해야 탈수와 기력 저하를 막을 수 있습니다.' },
           { id: 'simethicone', reason: '설사와 함께 배에 가스가 차고 부글거릴 때 Simethicone(De-Gas)을 함께 쓰면 가스통과 설사를 동시에 잡아줍니다.' },
@@ -917,7 +1015,7 @@
         avoidWith: [
           { id: 'docusate_senna', reason: '🚨 [정반대 기전 충돌] 변비약(하제)과 지사제를 동시에 복용하면 안 됩니다.' }
         ],
-        warnings: '🚨 고열(38.5도 이상)이 나거나 변에 피/점액이 섞여 나오는 세균성·혈성 장염(식중독 초기 독소 배출이 필요한 경우)에는 장운동을 멈추면 독소가 장내에 머물러 악화될 수 있으므로 복용하지 말고 Hydralyte만 마시며 의사를 찾으세요.',
+        warnings: '🚨 고열(38.5도 이상)이 나거나 혈변이 나오는 세균성 식중독 초기에는 독소 배출이 필요하므로 복용하지 말고 Hydralyte만 마시며 의사를 찾으세요.',
         healthifyUrl: 'https://www.unichem.co.nz/products/imodium-2mg-capsules-20s'
       },
       {
@@ -928,16 +1026,16 @@
         drugClass: '위장관 표면장력 감소 가스 기포 제거제',
         symptoms: ['indigestion', 'cramps'],
         whenToUse: '배에 가스가 가득 차서 빵빵하고(Bloating), 꾸르륵 소리가 나거나 가스가 안 빠져 배가 콕콕 찌르듯 아플 때 복용합니다.',
-        mechanism: '몸속으로 전혀 흡수되지 않는 물리적 활성 성분으로, 위와 장 속에 갇혀 있는 수많은 작은 가스 거품(점액 기포)들의 표면장력을 낮추어 작은 기포들을 큰 기포로 합쳐지게 만듭니다. 합쳐진 가스는 트림이나 방귀를 통해 쉽게 배출됩니다.',
-        expectedEffect: '복용 후 30분 내 복부 팽만감과 가스 압박감이 줄어듭니다. 혈액으로 흡수되지 않아 부작용이나 약물 상호작용이 거의 없습니다.',
+        mechanism: '몸속으로 전혀 흡수되지 않는 물리적 활성 성분으로, 위와 장 속에 갇혀 있는 수많은 작은 가스 거품들의 표면장력을 낮추어 큰 기포로 합쳐지게 만들어 트림이나 방귀로 쉽게 배출시킵니다.',
+        expectedEffect: '복용 후 30분 내 복부 팽만감과 가스 압박감이 줄어듭니다. 혈액으로 흡수되지 않아 약물 상호작용이 거의 없습니다.',
         dosingInfo: '식후 및 취침 전 1~2캡슐 복용.',
         synergyWith: [
-          { id: 'alginate_antacid', reason: '속쓰림과 가스 팽만이 함께 있을 때 제산제(Gaviscon/Mylanta)와 함께 쓰면 시너지가 납니다.' },
+          { id: 'alginate_antacid', reason: '속쓰림과 가스 팽만이 함께 있을 때 제산제(Gaviscon)와 함께 쓰면 시너지가 납니다.' },
           { id: 'hyoscine_butylbromide', reason: '가스로 인해 장이 경련할 때 Buscopan과 함께 쓰면 가스 제거 + 장 이완 효과가 동시에 나타납니다.' },
           { id: 'loperamide', reason: '부글거리는 가스성 설사에 Imodium과 함께 쓰기 좋습니다.' }
         ],
         avoidWith: [],
-        warnings: '체내에 흡수되지 않고 그대로 배출되므로 임산부나 다약제 복용자도 비교적 안전하게 사용할 수 있습니다.',
+        warnings: '체내에 흡수되지 않고 그대로 배출되므로 임산부나 다약제 복용자도 안전하게 사용할 수 있습니다.',
         healthifyUrl: 'https://www.unichem.co.nz/products/de-gas-caps-24s'
       },
       {
@@ -947,9 +1045,9 @@
         category: 'gastro',
         drugClass: '변 연화제 + 자극성/팽창성 하제 (Stool Softener & Laxative)',
         symptoms: ['constipation'],
-        whenToUse: '며칠째 변을 못 봐서 변이 딱딱하게 굳었거나 배변 시 통증이 있을 때(Coloxyl with Senna), 또는 평소 부드러운 배변 습관과 장 건강을 유지하고 싶을 때(Metamucil 차전자피, 뉴질랜드 특산 그린키위 추출물 Phloe) 사용합니다.',
-        mechanism: '① Docusate(변 연화제)는 음이온 계면활성제로 딱딱하게 굳은 변 속으로 물과 지방이 스며들게 해 변을 부드럽게 만듭니다. ② Senna(자극성 하제)는 대장 신경총을 자극해 멈춰 있던 대장 연동운동을 깨워 변을 밀어냅니다(보통 취침 전 복용 시 다음날 아침 효과). ③ Psyllium(Metamucil)과 Zyactinase(Phloe)는 수분을 흡수해 변의 부피를 늘리고 장내 효소·프리바이오틱 작용으로 자연스러운 배변을 유도합니다.',
-        expectedEffect: 'Coloxyl with Senna는 취침 전 복용 시 8~12시간 후(다음날 아침) 부드러운 배변 유도. Metamucil/Phloe는 12~72시간 내 자연스러운 쾌변 유도.',
+        whenToUse: '며칠째 변을 못 봐서 변이 딱딱하게 굳었거나 배변 시 통증이 있을 때(Coloxyl with Senna), 또는 평소 부드러운 배변 습관을 유지하고 싶을 때(Metamucil, 뉴질랜드 그린키위 추출물 Phloe) 사용합니다.',
+        mechanism: '① Docusate는 딱딱하게 굳은 변 속으로 물이 스며들게 해 변을 부드럽게 만들고, ② Senna는 대장 신경총을 자극해 멈춰 있던 장 연동운동을 깨워 변을 밀어냅니다. ③ Phloe(키위 효소)와 Metamucil(식이섬유)은 수분을 머금어 자연스러운 쾌변을 유도합니다.',
+        expectedEffect: 'Coloxyl with Senna는 취침 전 복용 시 8~12시간 후(다음날 아침) 부드러운 배변 유도.',
         dosingInfo: 'Coloxyl with Senna: 밤에 1~2정 물과 함께 복용. Metamucil/Phloe: 매일 충분한 물과 함께 복용.',
         synergyWith: [
           { id: 'simethicone', reason: '변비로 인해 배에 가스가 찼을 때 가스제거제(De-Gas)와 함께 복용할 수 있습니다.' }
@@ -957,7 +1055,7 @@
         avoidWith: [
           { id: 'loperamide', reason: '🚨 지사제(Imodium)와 반대 작용이므로 함께 복용하지 마세요.' }
         ],
-        warnings: 'Senna나 Bisacodyl(Dulcolax) 같은 자극성 변비약은 1주일 이상 장기간 매일 복용하면 대장이 스스로 움직이는 힘을 잃을 수 있으므로 단기 해결용으로 쓰고, 평소 관리에는 Phloe나 Metamucil을 사용하세요.',
+        warnings: '자극성 변비약(Senna)은 단기 해결용으로 쓰고, 평소 관리에는 Phloe나 Metamucil을 사용하세요.',
         healthifyUrl: 'https://www.unichem.co.nz/products/coloxyl-with-senna-tablets-30s'
       },
       {
@@ -968,7 +1066,7 @@
         drugClass: 'WHO 표준 삼투압 전해질·수분 보충제 (Oral Rehydration Therapy)',
         symptoms: ['dehydration', 'diarrhoea', 'fever', 'motionsickness'],
         whenToUse: '장염(설사·구토), 고열, 심한 땀 배출, 또는 음주 후 숙취로 몸에서 수분과 전해질이 빠져나가 어지럽고 기력이 없을 때 맹물이나 이온음료 대신 마십니다.',
-        mechanism: '소장 점막에 존재하는 나트륨-포도당 공동수송체(SGLT-1, Sodium-Glucose Cotransporter 1) 기전을 활용합니다. 설사 중에도 이 수송체는 정상 작동하는데, 물만 마실 때보다 정확한 비율의 포도당과 나트륨이 함께 들어올 때 수분 흡수 속도가 2~3배 이상 빨라집니다(일반 스포츠음료는 당분이 너무 높고 나트륨이 낮아 장염 시 오히려 삼투성 설사를 유발할 수 있음).',
+        mechanism: '소장 점막의 나트륨-포도당 공동수송체(SGLT-1) 기전을 활용하여, 물만 마실 때보다 정확한 비율의 포도당과 나트륨이 함께 들어올 때 수분 흡수 속도를 2~3배 이상 높여줍니다.',
         expectedEffect: '섭취 즉시 체내 수분 및 전해질 균형을 회복시켜 탈수 두통, 근육 경련, 무기력증을 빠르게 개선합니다.',
         dosingInfo: '발포정 2정 또는 분말 1포를 200ml 시원한 물에 녹여 천천히 자주 마십니다.',
         synergyWith: [
@@ -976,7 +1074,7 @@
           { id: 'paracetamol', reason: '고열로 인한 탈수 시 해열제(Panadol)와 함께 마시면 체온 조절과 회복이 훨씬 빨라집니다.' }
         ],
         avoidWith: [],
-        warnings: '정해진 물의 양(200ml)을 정확히 맞춰 타야 최적의 삼투압이 유지됩니다. 다른 음료나 주스에 타지 말고 물에 타서 드세요.',
+        warnings: '정해진 물의 양(200ml)을 정확히 맞춰 타야 최적의 삼투압이 유지됩니다.',
         healthifyUrl: 'https://www.unichem.co.nz/products/hydralyte-effervescent-tablets-orange-40s'
       },
       {
@@ -987,14 +1085,14 @@
         drugClass: '소변 산도 중화 요로 알칼리화제 (Urinary Alkaliniser)',
         symptoms: ['uti'],
         whenToUse: '방광염(UTI / Cystitis)으로 소변을 볼 때마다 요도가 타는 듯이 찌릿거리고 아프며 소변이 자주 마려울 때 통증을 빠르게 진정시키기 위해 마십니다.',
-        mechanism: '체내에서 대사되어 중탄산염(Bicarbonate) 형태로 신장을 통해 소변으로 배출되면서 산성(Acidic)인 소변을 알칼리성으로 중화시킵니다. 산성 소변이 염증이 생긴 방광과 요도 점막을 자극해 발생하던 작열감(불타는 통증)을 즉시 없애주고 산성 환경을 좋아하는 세균 증식을 둔화시킵니다.',
+        mechanism: '신장을 통해 배출되면서 산성(Acidic)인 소변을 알칼리성으로 중화시킵니다. 산성 소변이 염증이 생긴 방광과 요도 점막을 자극해 발생하던 작열감(불타는 통증)을 즉시 없애줍니다.',
         expectedEffect: '물에 타서 복용 후 1~2시간 내 소변 볼 때의 찌릿한 작열감과 통증이 현저히 줄어듭니다.',
         dosingInfo: '성인 기준 하루 4회, 1포(4g)를 차가운 물 한 컵에 녹여 복용 (최대 5일 이내).',
         synergyWith: [
           { id: 'paracetamol', reason: '소변 산도를 중화하는 Ural과 하복부 통증을 줄이는 Paracetamol을 함께 복용하면 방광염 초기 고통을 크게 덜어줍니다.' }
         ],
         avoidWith: [],
-        warnings: '⚠️ Ural은 소변 통증을 줄여주는 대증요법제이지 세균을 죽이는 항생제가 아닙니다! 뉴질랜드에서는 만 16~65세 여성의 단순 방광염인 경우 약국에서 인증 약사(Pharmacist)와 상담하면 처방전 없이도 항생제(Trimethoprim 또는 Nitrofurantoin)를 구매할 수 있으니 증상이 지속되면 약사에게 상담하세요.',
+        warnings: '⚠️ Ural은 통증 완화제이며 항생제가 아닙니다! 뉴질랜드 약국에서 인증 약사(Pharmacist)와 상담하면 처방전 없이 방광염 항생제를 구매할 수 있으니 증상이 지속되면 약사에게 상담하세요.',
         healthifyUrl: 'https://www.unichem.co.nz/products/ural-sachets-4g-28pk'
       },
       {
@@ -1005,7 +1103,7 @@
         drugClass: '1세대 피페라진계 항히스타민·항콜린 진토제 (Vestibular H1 Blocker)',
         symptoms: ['motionsickness'],
         whenToUse: '뉴질랜드 남섬/북섬 구불구불한 도로 운전, 페리(Interislander), 낚시배, 비행기 탑승 시 멀미, 어지러움, 메스꺼움(구역감)을 예방하고 치료할 때 복용합니다.',
-        mechanism: '귀 안쪽 전정기관(Vestibular system)에서 뇌의 구토 중추(Vomiting centre)로 전달되는 신경 경로의 H1 히스타민 수용체와 무스카린성 아세틸콜린 수용체를 동시에 차단하여 흔들림에 의한 평형감각 혼란과 구역 반사를 진정시킵니다.',
+        mechanism: '귀 안쪽 전정기관에서 뇌의 구토 중추로 전달되는 신경 경로의 H1 히스타민 수용체와 항콜린 수용체를 차단하여 흔들림에 의한 평형감각 혼란과 구역 반사를 진정시킵니다.',
         expectedEffect: '출발 1시간 전 복용 시 최대 24시간 동안 멀미와 구역감을 예방합니다.',
         dosingInfo: '성인 기준 출발 1시간 전에 2정(25mg) 복용 (24시간 지속).',
         synergyWith: [
@@ -1015,34 +1113,69 @@
           { id: 'cetirizine', reason: '🚨 [항히스타민 중복 금기] 알레르기약(Zyrtec, Claratyne, Telfast)이나 야간용 감기약과 동시에 복용하면 항히스타민 과량으로 심한 졸음과 어지러움이 발생합니다.' },
           { id: 'hyoscine_butylbromide', reason: '⚠️ 항콜린 작용이 겹쳐 입마름과 시야 흐림이 심해질 수 있습니다.' }
         ],
-        warnings: '졸음을 유발할 수 있으므로 복용 후 직접 운전하거나 위험한 기계를 다루지 마세요. 음주 금지.',
+        warnings: '졸음을 유발할 수 있으므로 복용 후 직접 운전하지 마세요.',
         healthifyUrl: 'https://www.unichem.co.nz/products/sea-legs-tablets-12s'
       },
       {
         id: 'hydrocortisone_topical',
-        nameKo: '하이드로코르티손 / 클로트리마졸·과산화수소 (피부 염증·항진균·상처 외용제)',
-        nameEn: 'Hydrocortisone 0.5%~1% / Clotrimazole 1% / Hydrogen Peroxide 1% Cream',
+        nameKo: '과산화수소 1% / 덱스판테놀 / 클로트리마졸 / 하이드로코르티손 (상처·점막재생·항진균·습진 외용제)',
+        nameEn: 'Hydrogen Peroxide 1% (Crystaderm) / Dexpanthenol (Bepanthen) / Clotrimazole / Hydrocortisone',
         category: 'other',
-        drugClass: '피부 외용 스테로이드 / 항진균제 / 비항생제 살균 연고',
-        symptoms: ['hives_eczema', 'fungal', 'wound'],
-        whenToUse: '피부 증상 원인에 따라 정확히 구분해 바릅니다: ① 습진·접촉성 피부염·벌레 물린 데 가려움에는 Hydrocortisone(DermAid), ② 무좀·완선·칸디다 곰팡이 감염에는 Clotrimazole(Canesten), ③ 찰과상·상처·농가진 소독에는 Hydrogen Peroxide 1%(Crystaderm) 또는 Chlorhexidine(Bepanthen/Savlon)을 바릅니다.',
-        mechanism: '① Hydrocortisone은 피부 세포의 포스포리파아제 A2를 억제해 부기·발적·가려움을 가라앉힙니다. ② Clotrimazole은 진균(곰팡이) 세포막의 에르고스테롤 합성을 차단해 곰팡이를 사멸시킵니다(심하게 가려운 무좀에는 두 성분이 합쳐진 Canesten Extra 사용). ③ 뉴질랜드 대표 상처 연고인 Crystaderm(지질 안정화 과산화수소 1%)은 상처 부위에서 산소 라디칼을 방출해 항생제 내성 위험 없이 세균 세포벽을 파괴합니다.',
-        expectedEffect: '증상 원인에 맞는 연고 도포 시 가려움·염증 완화 및 2차 세균/진균 감염 차단.',
-        dosingInfo: '하루 1~3회 환부에 얇게 펴 바릅니다 (Hydrocortisone 일반 판매용은 7일 이내 사용).',
+        drugClass: '비항생제 살균 연고 / 피부·점막 재생 / 항진균 / 외용 스테로이드',
+        symptoms: ['wound', 'nasaldry', 'hives_eczema', 'fungal'],
+        whenToUse: '① 코 입구 헌 데·찰과상·상처 소독에는 항생제 내성 없는 Crystaderm(과산화수소 1%)과 점막/피부 재생제 Bepanthen(프로비타민 B5), ② 습진·벌레 물린 데 가려움에는 Hydrocortisone(DermAid), ③ 무좀·곰팡이 감염에는 Clotrimazole(Canesten)을 구분해 바릅니다.',
+        mechanism: '① 뉴질랜드 대표 상처 연고인 Crystaderm(지질 안정화 과산화수소 1%)은 상처나 헐어 있는 코 입구 부위에서 산소 라디칼을 방출해 항생제 내성 없이 세균을 살균하고 딱지가 부드럽게 아물도록 돕습니다. ② Bepanthen의 Dexpanthenol은 피부·점막 세포 내에서 판토텐산(비타민 B5)으로 전환되어 헐은 상피 조직 재생을 촉진합니다. ③ Hydrocortisone은 피부 염증을 억제하고, ④ Clotrimazole은 곰팡이 세포막 합성을 차단합니다.',
+        expectedEffect: '헐거나 까진 상처의 2차 세균 감염 차단, 빠른 점막·피부 재생 및 가려움·염증 완화.',
+        dosingInfo: '하루 1~3회 환부에 얇게 펴 바릅니다.',
         synergyWith: [
-          { id: 'cetirizine', reason: '벌레 물림이나 습진으로 가려움이 심해 긁게 될 때 바르는 DermAid 크림과 먹는 항히스타민제(Zyrtec/Telfast)를 함께 쓰면 가려움 악순환을 빠르게 끊어줍니다.' }
+          { id: 'nasal_moist_oil', reason: '코 안쪽 깊은 점막은 Fess Dry Nose Oil로 보습하고, 손이 닿는 코 입구(콧구멍 앞쪽)가 헐어 피딱지가 앉은 부위에는 면봉으로 Crystaderm이나 Bepanthen을 살짝 발라주면 훨씬 빨리 아뭅니다.' },
+          { id: 'cetirizine', reason: '벌레 물림이나 습진으로 가려움이 심할 때 바르는 DermAid 크림과 먹는 항히스타민제를 함께 쓰면 가려움 악순환을 빠르게 끊어줍니다.' }
         ],
         avoidWith: [],
-        warnings: '🚨 곰팡이 감염(무좀)이나 세균 감염 상처에 단독 스테로이드 크림(Hydrocortisone 단독제)만 바르면 면역이 억제되어 균이 더 번질 수 있습니다! 곰팡이에는 Canesten을, 상처 소독에는 Crystaderm/Savlon을 쓰세요.',
+        warnings: '🚨 곰팡이 감염(무좀)이나 세균 감염 상처에 단독 스테로이드 크림(DermAid)만 바르면 균이 더 번질 수 있으니, 상처 소독에는 Crystaderm을, 곰팡이에는 Canesten을 쓰세요.',
         healthifyUrl: 'https://www.unichem.co.nz/products/crystaderm-cream-15g'
       }
     ];
 
-    // 3. NEW ZEALAND PHARMACY PRODUCTS CATALOG
+    // 4. NEW ZEALAND PHARMACY PRODUCTS CATALOG (20 Core Products)
     const INITIAL_PRODUCTS = [
       {
+        id: 'prod_fess_dry_oil',
+        brand: 'Fess Dry Nose Oil Nasal Spray 10ml',
+        maker: 'Fess NZ',
+        ingredientId: 'nasal_moist_oil',
+        activeText: 'Sesame Seed Oil 100% + Vitamin E (Tocopherol)',
+        category: 'cold',
+        otcClass: 'General Sale',
+        priceEst: 'NZ$15.99 ~ $18.99',
+        form: '비강 보습 오일 스프레이 (Nasal Oil Spray)',
+        packColor: 'from-teal-600 to-cyan-800',
+        badgeText: '코안 헐음·피딱지·건조 1순위',
+        summary: '코 안이 헐어 피가 묻어나오고 매일 아침 코딱지가 앉을 때, 세서미 오일과 비타민E가 코점막에 보호 유막을 씌워 수분 증발과 코피·딱지 생성을 막아주는 전용 오일 스프레이입니다.',
+        imgUrl: 'http://www.unichem.co.nz/cdn/shop/files/GXH_11063546-0.jpg?v=1759286311',
+        storeName: 'Unichem Pharmacy NZ',
+        storeUrl: 'https://www.unichem.co.nz/products/fess-dry-nose-relief-10ml'
+      },
+      {
+        id: 'prod_flo_saline_plus',
+        brand: 'Flo Saline Plus / Fess Saline Nasal Spray 30ml',
+        maker: 'ENT Technologies / Fess NZ',
+        ingredientId: 'saline_nasal',
+        activeText: 'Preservative-Free Isotonic Saline + Minerals',
+        category: 'cold',
+        otcClass: 'General Sale',
+        priceEst: 'NZ$11.99 ~ $15.99',
+        form: '무보존제 식염수 스프레이 (Saline Spray)',
+        packColor: 'from-sky-500 to-blue-700',
+        badgeText: '마른 피딱지·코딱지 연화 세척',
+        summary: '코안에 말라붙은 피딱지와 코딱지를 억지로 떼지 않고 부드럽게 불려서 제거해 주며, 건조한 코점막에 수분과 미네랄을 공급하는 무보존제 생리식염수 스프레이입니다.',
+        imgUrl: 'http://www.unichem.co.nz/cdn/shop/files/GXH_20025127-0.png?v=1759286895',
+        storeName: 'Unichem Pharmacy NZ',
+        storeUrl: 'https://www.unichem.co.nz/products/flo-saline-plus-nasal-spray-30ml'
+      },
+      {
         id: 'prod_panadol',
-        brand: 'Panadol Tablets 500mg',
+        brand: 'Panadol Tablets 500mg / Optizorb',
         maker: 'GSK / Haleon NZ',
         ingredientId: 'paracetamol',
         activeText: 'Paracetamol 500mg',
@@ -1052,7 +1185,7 @@
         form: '정제 (Tablets / Optizorb Caplets)',
         packColor: 'from-emerald-600 to-teal-700',
         badgeText: 'NZ 국민 해열진통제',
-        summary: '발열, 두통, 초기 인후통, 치통에 위장 자극 없이 공복에도 복용 가능한 기본 해열진통제 (Optizorb 라인은 흡수 속도를 높인 제품).',
+        summary: '발열, 두통, 초기 인후통, 치통에 위장 자극 없이 공복에도 복용 가능한 기본 해열진통제입니다.',
         imgUrl: 'https://unichemnz.myshopify.com/cdn/shop/files/GXH_11253098-0.jpg',
         storeName: 'Unichem Pharmacy NZ',
         storeUrl: 'https://www.unichem.co.nz/products/panadol-500mg-tabs-100s'
@@ -1069,7 +1202,7 @@
         form: '정제 / 액상캡슐 (Tablets / Liquid Capsules)',
         packColor: 'from-orange-500 to-red-600',
         badgeText: '염증·생리통·인후부종',
-        summary: '목이 부은 인후통, 생리통, 치통, 근육통, 편두통 등 염증이 동반된 통증을 가라앉히는 대표 소염진통제 (Zavance는 체내 흡수가 2배 빠른 제형).',
+        summary: '목이 부은 인후통, 생리통, 치통, 근육통, 편두통 등 염증이 동반된 통증을 가라앉히는 대표 소염진통제입니다.',
         imgUrl: 'https://static.chemistwarehouse.co.nz/ams/media/pi/97305/2DF_200.jpg',
         storeName: 'Unichem Pharmacy NZ',
         storeUrl: 'https://www.unichem.co.nz/products/nurofen-tablets-24s'
@@ -1120,7 +1253,7 @@
         form: '속효성 정제 (Tablets)',
         packColor: 'from-orange-600 to-amber-700',
         badgeText: '약사 상담 강력 소염제',
-        summary: '급성 허리 통증, 심한 염좌, 근육/관절 염증, 급성 편두통에 사용하는 강력한 경구 소염진통제 (약사와 짧은 상담 후 구매 가능).',
+        summary: '급성 허리 통증, 심한 염좌, 근육/관절 염증, 급성 편두통에 사용하는 강력한 경구 소염진통제입니다.',
         imgUrl: 'https://static.chemistwarehouse.co.nz/ams/media/pi/31052/hero_150.jpg',
         storeName: 'Chemist Warehouse NZ',
         storeUrl: 'https://www.chemistwarehouse.co.nz/shop-online/196/analgesics'
@@ -1161,7 +1294,7 @@
       },
       {
         id: 'prod_strepsils',
-        brand: 'Strepsils Soothing Honey & Lemon / Plus Lozenges',
+        brand: 'Strepsils Soothing Honey & Lemon Lozenges',
         maker: 'Reckitt NZ',
         ingredientId: 'amylmetacresol_lozenge',
         activeText: 'Amylmetacresol 0.6mg + Dichlorobenzyl Alcohol 1.2mg',
@@ -1212,20 +1345,54 @@
       },
       {
         id: 'prod_lemsip',
-        brand: 'Lemsip Max Cold & Flu Hot Drink / Capsules',
-        maker: 'Reckitt NZ',
+        brand: 'Lemsip Max Cold & Flu Hot Drink / Codral Capsules',
+        maker: 'Reckitt / Kenvue NZ',
         ingredientId: 'cold_combo_pe',
-        activeText: 'Paracetamol 1000mg + Phenylephrine HCl 12.2mg',
+        activeText: 'Paracetamol 500~1000mg + Phenylephrine (± Guaifenesin)',
         category: 'cold',
         otcClass: 'General Sale',
-        priceEst: 'NZ$14.99 ~ $18.99',
-        form: '따뜻한 차 분말 / 캡슐 (Hot Drink Sachets)',
+        priceEst: 'NZ$14.99 ~ $21.99',
+        form: '따뜻한 차 분말 / 캡슐 (Hot Drink / Capsules)',
         packColor: 'from-yellow-500 to-emerald-700',
-        badgeText: '따뜻하게 마시는 종합감기약',
-        summary: '뜨거운 물에 타서 레몬/블랙커런트 차처럼 마시면 수분 보충과 함께 고함량 Paracetamol(1000mg)과 코막힘 완화제가 빠르게 흡수됩니다 (Panadol 중복 주의!).',
+        badgeText: 'NZ 대표 종합감기약',
+        summary: '발열, 두통, 오한, 코막힘을 한 번에 잡는 종합감기약입니다. Paracetamol이 고함량 들어 있으므로 절대 Panadol과 중복 복용하지 마세요!',
         imgUrl: 'http://www.unichem.co.nz/cdn/shop/files/gxh_11022666-0.jpg?v=1758856040',
         storeName: 'Unichem Pharmacy NZ',
         storeUrl: 'https://www.unichem.co.nz/products/lemsip-max-cold-flu-with-decongestant-blackcurrant-hot-drink10pk'
+      },
+      {
+        id: 'prod_durotuss_dry',
+        brand: 'Duro-Tuss Dry Cough Liquid Forte 200ml',
+        maker: 'iNova Pharmaceuticals NZ',
+        ingredientId: 'dextromethorphan',
+        activeText: 'Dextromethorphan Hydrobromide 3mg/mL',
+        category: 'cough',
+        otcClass: 'Pharmacy Only',
+        priceEst: 'NZ$16.99 ~ $20.99',
+        form: '시럽 (Oral Liquid)',
+        packColor: 'from-rose-600 to-pink-800',
+        badgeText: '마른기침 중추 억제 시럽',
+        summary: '가래 없이 목이 간질거리며 끊이지 않는 마른기침을 뇌의 기침 중추에서 진정시켜 최대 8시간 동안 기침을 멈춰주는 시럽입니다.',
+        imgUrl: 'https://www.unichem.co.nz/cdn/shop/files/GXH_20042031-0.jpg?v=1779082646&width=800',
+        storeName: 'Unichem Pharmacy NZ',
+        storeUrl: 'https://www.unichem.co.nz/products/duro-tuss-dry-cough-liquid-forte-200ml'
+      },
+      {
+        id: 'prod_robitussin_chesty',
+        brand: 'Robitussin Chesty Cough Forte / Duro-Tuss Chesty',
+        maker: 'Haleon / iNova NZ',
+        ingredientId: 'bromhexine_guaifenesin',
+        activeText: 'Bromhexine HCl 0.8mg/mL + Guaifenesin 20mg/mL',
+        category: 'cough',
+        otcClass: 'Pharmacy Only',
+        priceEst: 'NZ$16.99 ~ $21.99',
+        form: '시럽 (Oral Liquid 200ml)',
+        packColor: 'from-teal-600 to-emerald-800',
+        badgeText: '끈적한 가래 용해·배출',
+        summary: '점액용해제(Bromhexine)로 끈적한 가래 사슬을 끊어내고 거담제(Guaifenesin)로 기관지 수분을 늘려 깊숙한 가래를 시원하게 배출시킵니다.',
+        imgUrl: 'https://www.unichem.co.nz/cdn/shop/files/GXH_11004374-0.jpg?v=1769482810&width=800',
+        storeName: 'Unichem Pharmacy NZ',
+        storeUrl: 'https://www.unichem.co.nz/products/robitussin-chesty-cough-forte-200ml'
       },
       {
         id: 'prod_codral',
@@ -1236,10 +1403,10 @@
         category: 'cold',
         otcClass: 'Pharmacy Only',
         priceEst: 'NZ$15.99 ~ $22.99',
-        form: '캡슐 / 정제 (Capsules / Day & Night Tabs)',
+        form: '캡슐 / 정제 (Capsules)',
         packColor: 'from-emerald-700 to-teal-900',
         badgeText: 'NZ 대표 종합감기 알약',
-        summary: '발열, 두통, 몸살, 코막힘, 가래기침을 한 번에 잡는 종합감기약입니다. Day & Night 제품은 밤에 콧물을 말리고 숙면을 돕는 야간용 정제가 포함됩니다.',
+        summary: '발열, 두통, 몸살, 코막힘, 가래기침을 한 번에 잡는 종합감기약입니다.',
         imgUrl: 'https://unichemnz.myshopify.com/cdn/shop/files/gxh_20008225-0.jpg',
         storeName: 'Unichem Pharmacy NZ',
         storeUrl: 'https://www.unichem.co.nz/products/codral-cold-flu-mucus-cough-capsules-24s'
@@ -1262,40 +1429,6 @@
         storeUrl: 'https://www.unichem.co.nz/products/fess-nasal-spray-30ml'
       },
       {
-        id: 'prod_durotuss_dry',
-        brand: 'Duro-Tuss Dry Cough Liquid Forte 200ml',
-        maker: 'iNova Pharmaceuticals NZ',
-        ingredientId: 'dextromethorphan',
-        activeText: 'Dextromethorphan Hydrobromide 3mg/mL',
-        category: 'cough',
-        otcClass: 'Pharmacy Only',
-        priceEst: 'NZ$16.99 ~ $20.99',
-        form: '시럽 (Oral Liquid)',
-        packColor: 'from-rose-600 to-pink-800',
-        badgeText: '마른기침 중추 억제 시럽',
-        summary: '가래 없이 목이 간질거리며 끊이지 않는 마른기침을 뇌의 기침 중추에서 진정시켜 최대 8시간 동안 기침을 멈춰주는 시럽입니다.',
-        imgUrl: 'https://www.unichem.co.nz/cdn/shop/files/GXH_20042031-0.jpg?v=1779082646&width=800',
-        storeName: 'Unichem Pharmacy NZ',
-        storeUrl: 'https://www.unichem.co.nz/products/duro-tuss-dry-cough-liquid-forte-200ml'
-      },
-      {
-        id: 'prod_robitussin_chesty',
-        brand: 'Robitussin Chesty Cough Forte / Duro-Tuss Chesty Double Action',
-        maker: 'Haleon / iNova NZ',
-        ingredientId: 'bromhexine_guaifenesin',
-        activeText: 'Bromhexine HCl 0.8mg/mL + Guaifenesin 20mg/mL',
-        category: 'cough',
-        otcClass: 'Pharmacy Only',
-        priceEst: 'NZ$16.99 ~ $21.99',
-        form: '시럽 (Oral Liquid 200ml)',
-        packColor: 'from-teal-600 to-emerald-800',
-        badgeText: '끈적한 가래 용해·배출',
-        summary: '점액용해제(Bromhexine)로 끈적한 가래 사슬을 끊어내고 거담제(Guaifenesin)로 기관지 수분을 늘려 깊숙한 가래를 시원하게 배출시킵니다.',
-        imgUrl: 'https://www.unichem.co.nz/cdn/shop/files/GXH_11004374-0.jpg?v=1769482810&width=800',
-        storeName: 'Unichem Pharmacy NZ',
-        storeUrl: 'https://www.unichem.co.nz/products/robitussin-chesty-cough-forte-200ml'
-      },
-      {
         id: 'prod_zyrtec_razene',
         brand: 'Zyrtec / Razene / Pharmacy Essentials Cetirizine 10mg',
         maker: 'Kenvue / Douglas NZ',
@@ -1303,11 +1436,11 @@
         activeText: 'Cetirizine Hydrochloride 10mg',
         category: 'allergy',
         otcClass: 'Pharmacy Only',
-        priceEst: 'NZ$9.99 ~ $24.99 (대용량 70~90정 가성비 우수)',
+        priceEst: 'NZ$9.99 ~ $24.99',
         form: '정제 (Tablets)',
         packColor: 'from-emerald-600 to-green-800',
         badgeText: '빠른 효과 24시간 알레르기약',
-        summary: '꽃가루 비염(재채기·맑은 콧물·눈 가려움)과 피부 두드러기·벌레물림 가려움을 빠르게 잡아주는 뉴질랜드 최고 인기 항히스타민제 (Razene 대용량이 가성비 최고).',
+        summary: '꽃가루 비염과 피부 두드러기·벌레물림 가려움을 빠르게 잡아주는 뉴질랜드 최고 인기 항히스타민제입니다.',
         imgUrl: 'https://www.unichem.co.nz/cdn/shop/files/GXH_11218180-0.jpg?v=1769482551&width=800',
         storeName: 'Unichem Pharmacy NZ',
         storeUrl: 'https://www.unichem.co.nz/products/razene-tabs-10mg-90s'
@@ -1317,14 +1450,14 @@
         brand: 'Telfast 180mg / Claratyne 10mg Tablets',
         maker: 'Sanofi / Bayer NZ',
         ingredientId: 'cetirizine',
-        activeText: 'Fexofenadine HCl 180mg (Telfast) / Loratadine 10mg (Claratyne)',
+        activeText: 'Fexofenadine HCl 180mg / Loratadine 10mg',
         category: 'allergy',
         otcClass: 'Pharmacy Only',
         priceEst: 'NZ$17.99 ~ $34.99',
         form: '정제 (Tablets)',
         packColor: 'from-purple-600 to-fuchsia-800',
         badgeText: '졸음 걱정 없는 낮시간 비염약',
-        summary: '운전이나 학업·업무 중 졸음이 전혀 오지 않는 항히스타민제를 원할 때 가장 추천되는 제품입니다 (특히 Telfast 180mg은 두드러기·심한 비염에 강력).',
+        summary: '운전이나 학업·업무 중 졸음이 전혀 오지 않는 항히스타민제를 원할 때 가장 추천되는 제품입니다.',
         imgUrl: 'https://www.unichem.co.nz/cdn/shop/files/GXH_11004853-0.jpg?v=1769482669&width=800',
         storeName: 'Unichem Pharmacy NZ',
         storeUrl: 'https://www.unichem.co.nz/products/telfast-tablets-180mg-30s'
@@ -1368,11 +1501,11 @@
         brand: 'Gaviscon Dual Action Chewable Tablets / Liquid',
         maker: 'Reckitt NZ',
         ingredientId: 'alginate_antacid',
-        activeText: 'Sodium Alginate 250mg + Sodium Bicarbonate 106.5mg + Calcium Carbonate 187.5mg',
+        activeText: 'Sodium Alginate 250mg + Sodium Bicarbonate + Calcium Carbonate',
         category: 'gastro',
         otcClass: 'General Sale',
         priceEst: 'NZ$9.99 ~ $21.99',
-        form: '츄어블 정제 / 현탁액 / 짜먹는 스틱',
+        form: '츄어블 정제 / 현탁액 / 스틱',
         packColor: 'from-rose-600 to-teal-700',
         badgeText: '속쓰림·신물 역류 즉효 방어막',
         summary: '위산을 즉시 중화하면서 위 상단에 쫀쫀한 알긴산 방어막(Raft)을 띄워 식도로 신물이 올라오는 것을 물리적으로 막아주는 필수 상비약입니다.',
@@ -1416,14 +1549,14 @@
       },
       {
         id: 'prod_imodium',
-        brand: 'Imodium 2mg Capsules / Zapid Dissolving Tabs',
+        brand: 'Imodium 2mg Capsules / Zapid',
         maker: 'Kenvue NZ',
         ingredientId: 'loperamide',
         activeText: 'Loperamide Hydrochloride 2mg',
         category: 'gastro',
         otcClass: 'General Sale',
         priceEst: 'NZ$12.99 ~ $19.99',
-        form: '캡슐 / 입에서 녹는 정제',
+        form: '캡슐 / 속붕해정',
         packColor: 'from-teal-500 to-cyan-700',
         badgeText: '급성 설사 장운동 진정 1위',
         summary: '과도하게 빨라진 장 연동운동을 진정시키고 수분 재흡수를 도와 급성 물설사를 1시간 내에 빠르게 멈춰주는 지사제입니다.',
@@ -1453,14 +1586,14 @@
         brand: 'Coloxyl with Senna / Phloe Kiwifruit Bowel Health',
         maker: 'Aspen / Douglas NZ',
         ingredientId: 'docusate_senna',
-        activeText: 'Docusate 50mg + Senna 8mg (Coloxyl) / Zyactinase Kiwifruit Extract (Phloe)',
+        activeText: 'Docusate 50mg + Senna 8mg / Zyactinase Kiwifruit Extract',
         category: 'gastro',
         otcClass: 'General Sale',
         priceEst: 'NZ$12.99 ~ $24.99',
         form: '정제 / 츄어블 / 캡슐',
         packColor: 'from-lime-600 to-emerald-800',
         badgeText: '딱딱한 변 연화 & NZ 키위 장케어',
-        summary: '급성 변비에는 변을 부드럽게 적시고 장을 깨우는 Coloxyl with Senna를, 매일 부드러운 쾌변 관리에는 뉴질랜드 그린키위 효소 제품인 Phloe나 Metamucil을 씁니다.',
+        summary: '급성 변비에는 변을 부드럽게 적시고 장을 깨우는 Coloxyl with Senna를, 매일 부드러운 쾌변 관리에는 뉴질랜드 그린키위 효소 제품인 Phloe를 씁니다.',
         imgUrl: 'https://www.unichem.co.nz/cdn/shop/files/GXH_11004332-0.jpg?v=1769482810&width=800',
         storeName: 'Unichem Pharmacy NZ',
         storeUrl: 'https://www.unichem.co.nz/products/coloxyl-with-senna-tablets-30s'
@@ -1470,11 +1603,11 @@
         brand: 'Hydralyte Electrolyte Effervescent Tablets / Sachets',
         maker: 'Hydralyte NZ',
         ingredientId: 'oral_rehydration',
-        activeText: 'Glucose + Citric Acid + Sodium + Potassium Chloride',
+        activeText: 'Glucose + Citric Acid + Sodium + Potassium',
         category: 'other',
         otcClass: 'General Sale',
         priceEst: 'NZ$14.99 ~ $22.99',
-        form: '발포정 / 분말 / 아이스블록',
+        form: '발포정 / 분말 포',
         packColor: 'from-orange-500 to-amber-600',
         badgeText: '장염·고열·숙취 전해질 보충',
         summary: '설사, 구토, 고열, 심한 발한, 숙취 시 일반 물보다 2~3배 빠르게 수분과 전해질을 소장으로 흡수시키는 의학적 경구수액제입니다.',
@@ -1487,11 +1620,11 @@
         brand: 'Ural Effervescent Granules Sachets 4g',
         maker: 'Aspen NZ',
         ingredientId: 'sodium_citrate_uti',
-        activeText: 'Sodium Bicarbonate 1.76g + Citric Acid 0.72g + Sodium Citrate 0.63g',
+        activeText: 'Sodium Bicarbonate + Citric Acid + Sodium Citrate',
         category: 'other',
         otcClass: 'General Sale',
         priceEst: 'NZ$14.99 ~ $21.99',
-        form: '발포 과립 분말 포 (Effervescent Sachets)',
+        form: '발포 과립 분말 포 (Sachets)',
         packColor: 'from-amber-400 to-teal-700',
         badgeText: '방광염 배뇨통·작열감 완화',
         summary: '방광염(UTI)으로 소변 볼 때 찌릿하고 타는 듯한 통증을 산성 소변 알칼리화 기전으로 빠르게 중화시켜 주는 마시는 가루약입니다.',
@@ -1518,24 +1651,24 @@
       },
       {
         id: 'prod_crystaderm_canesten',
-        brand: 'Crystaderm First Aid Cream / Canesten / Ego DermAid',
+        brand: 'Crystaderm Cream 15g / Bepanthen / Canesten / DermAid',
         maker: 'AFT / Bayer / Ego NZ',
         ingredientId: 'hydrocortisone_topical',
-        activeText: 'Hydrogen Peroxide 1% (Crystaderm) / Clotrimazole 1% (Canesten) / Hydrocortisone 0.5% (DermAid)',
+        activeText: 'Hydrogen Peroxide 1% (Crystaderm) / Dexpanthenol (Bepanthen) / Clotrimazole / Hydrocortisone',
         category: 'other',
         otcClass: 'General Sale',
         priceEst: 'NZ$11.99 ~ $18.99',
-        form: '피부 외용 크림 (Topical Cream)',
+        form: '피부·점막 외용 크림 (Topical Cream)',
         packColor: 'from-teal-600 to-slate-800',
-        badgeText: 'NZ 대표 상처·무좀·습진 연고',
-        summary: '항생제 내성 없는 뉴질랜드 국민 상처 소독 연고 Crystaderm, 무좀·칸디다 항진균제 Canesten, 습진·벌레물림 스테로이드 연고 DermAid입니다.',
+        badgeText: '상처·코입구 헌데·무좀·습진 연고',
+        summary: '코 입구가 헐어 딱지가 생기거나 상처가 났을 때 바르는 뉴질랜드 국민 살균 연고 Crystaderm과 점막 재생 연고 Bepanthen, 무좀약 Canesten, 습진약 DermAid입니다.',
         imgUrl: 'https://www.unichem.co.nz/cdn/shop/files/GXH_11137590-0.jpg?v=1769482829&width=800',
         storeName: 'Unichem Pharmacy NZ',
         storeUrl: 'https://www.unichem.co.nz/products/crystaderm-cream-15g'
       }
     ];
 
-    // 4. APPLICATION STATE
+    // 5. APPLICATION STATE
     const state = {
       activeTab: 'symptom',
       bodyCategory: 'all',
@@ -1591,45 +1724,146 @@
       return SYMPTOMS.find(sym => sym.id === id);
     }
 
+    // ==================== NATURAL SENTENCE PARSER ENGINE ====================
+    function analyzeUserSentence(rawText) {
+      const q = (rawText || '').trim().toLowerCase();
+      if (!q) {
+        return {
+          hasText: false,
+          inferredSymptomIds: [],
+          matchedRules: [],
+          boostIngIds: new Set(),
+          penalizeIngIds: new Set()
+        };
+      }
+
+      const inferredSymptomSet = new Set();
+      const matchedRules = [];
+      const boostIngIds = new Set();
+      const penalizeIngIds = new Set();
+
+      // 1. Check conversational clinical rules first
+      NLP_CONVERSATIONAL_RULES.forEach(rule => {
+        if (rule.test(q)) {
+          matchedRules.push(rule);
+          rule.detectedSymptoms.forEach(s => inferredSymptomSet.add(s));
+          rule.boostIngredients.forEach(i => boostIngIds.add(i));
+          rule.penalizeIngredients.forEach(i => penalizeIngIds.add(i));
+        }
+      });
+
+      // 2. Check symptom dictionary keywords & colloquial phrases
+      SYMPTOMS.forEach(sym => {
+        if (sym.label.toLowerCase().includes(q)) {
+          inferredSymptomSet.add(sym.id);
+        }
+        sym.keywords.forEach(kw => {
+          const k = kw.toLowerCase();
+          if (q.includes(k)) {
+            inferredSymptomSet.add(sym.id);
+          }
+        });
+      });
+
+      // 3. Additional colloquial stem matching for Korean natural sentences
+      if (q.includes('코') && (q.includes('피') || q.includes('딱지') || q.includes('헐') || q.includes('헌') || q.includes('건조') || q.includes('쓰라'))) {
+        inferredSymptomSet.add('nasaldry');
+        boostIngIds.add('nasal_moist_oil');
+        boostIngIds.add('saline_nasal');
+      }
+      if ((q.includes('목') || q.includes('편도') || q.includes('침')) && (q.includes('아파') || q.includes('아프') || q.includes('붓') || q.includes('부어') || q.includes('따가') || q.includes('칼칼'))) {
+        inferredSymptomSet.add('sorethroat');
+      }
+      if (q.includes('열') || q.includes('오한') || q.includes('으슬')) {
+        inferredSymptomSet.add('fever');
+      }
+      if (q.includes('머리') || q.includes('두통') || q.includes('편두통') || q.includes('지끈')) {
+        inferredSymptomSet.add('headache');
+      }
+      if (q.includes('몸살') || q.includes('근육') || q.includes('관절') || q.includes('허리') || q.includes('쑤시') || q.includes('삐끗')) {
+        inferredSymptomSet.add('bodyache');
+      }
+      if (q.includes('신물') || q.includes('역류') || q.includes('속쓰') || (q.includes('속') && q.includes('쓰')) || (q.includes('가슴') && q.includes('타는'))) {
+        inferredSymptomSet.add('heartburn');
+      }
+      if (q.includes('설사') || q.includes('배탈') || q.includes('장염')) {
+        inferredSymptomSet.add('diarrhoea');
+      }
+      if (q.includes('쥐어짜') || q.includes('위경련') || q.includes('배앓이') || (q.includes('배') && q.includes('아파'))) {
+        inferredSymptomSet.add('cramps');
+      }
+      if (q.includes('소변') || q.includes('방광') || q.includes('오줌') || q.includes('배뇨')) {
+        inferredSymptomSet.add('uti');
+      }
+      if (q.includes('멀미') || q.includes('울렁') || q.includes('어지')) {
+        inferredSymptomSet.add('motionsickness');
+      }
+
+      return {
+        hasText: true,
+        inferredSymptomIds: Array.from(inferredSymptomSet),
+        matchedRules,
+        boostIngIds,
+        penalizeIngIds
+      };
+    }
+
+    // Apply sentence analysis & sync symptom tags when user clicks "증상 분석" or a sentence preset
+    function applyNaturalSentenceToSelection(sentenceText) {
+      const symInput = document.getElementById('symptomSearchInput');
+      const clearBtn = document.getElementById('clearSymptomInputBtn');
+      symInput.value = sentenceText;
+      state.symptomSearchQuery = sentenceText;
+      clearBtn.classList.toggle('hidden', !sentenceText);
+
+      const analysis = analyzeUserSentence(sentenceText);
+      if (analysis.inferredSymptomIds.length > 0) {
+        state.selectedSymptoms = analysis.inferredSymptomIds;
+      }
+      state.bodyCategory = 'all';
+      renderBodyCategories();
+      renderSymptomChips();
+      renderSymptomResults();
+    }
+
     function renderProductVisualBox(prod) {
       const hasImg = prod.imgUrl && prod.imgUrl.startsWith('http');
       return `
-        <div class="relative w-full h-36 rounded-xl bg-gradient-to-br ${prod.packColor || 'from-teal-700 to-slate-800'} p-3.5 text-white flex items-center justify-between overflow-hidden shadow-inner">
-          <div class="z-10 max-w-[62%] space-y-1">
-            <span class="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-black/25 text-white/95 border border-white/15">
-              ${prod.badgeText || prod.otcClass}
-            </span>
-            <h5 class="text-sm font-extrabold leading-tight line-clamp-2 drop-shadow-xs">${prod.brand}</h5>
-            <p class="text-[11px] text-white/85 font-medium truncate">${prod.activeText}</p>
-            <p class="text-[10px] text-emerald-200 font-semibold">${prod.priceEst}</p>
-          </div>
-          <div class="z-10 w-24 h-28 bg-white rounded-lg p-1.5 shadow-md flex items-center justify-center shrink-0 overflow-hidden border border-white/40">
+        <div class="flex items-center gap-3.5 p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80">
+          <div class="w-20 h-20 bg-white rounded-xl p-1.5 shadow-xs flex items-center justify-center shrink-0 overflow-hidden border border-slate-200">
             ${hasImg ? `
               <img src="${prod.imgUrl}" alt="${prod.brand}" loading="lazy" class="max-w-full max-h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
               <div style="display:none" class="w-full h-full flex-col items-center justify-center text-center p-1 text-slate-700">
-                <span class="text-2xl">💊</span>
-                <span class="text-[9px] font-bold leading-tight mt-1">${prod.brand.split(' ')[0]}</span>
+                <span class="text-xl">💊</span>
+                <span class="text-[9px] font-bold leading-tight mt-0.5">${prod.brand.split(' ')[0]}</span>
               </div>
             ` : `
               <div class="w-full h-full flex flex-col items-center justify-center text-center p-1 text-slate-700">
-                <span class="text-2xl">💊</span>
-                <span class="text-[9px] font-bold leading-tight mt-1">${prod.brand.split(' ')[0]}</span>
+                <span class="text-xl">💊</span>
+                <span class="text-[9px] font-bold leading-tight mt-0.5">${prod.brand.split(' ')[0]}</span>
               </div>
             `}
           </div>
-          <div class="absolute -right-6 -bottom-6 w-28 h-28 rounded-full bg-white/10 pointer-events-none"></div>
+          <div class="min-w-0 flex-1 space-y-1">
+            <span class="inline-block text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-teal-100/80 text-teal-900">
+              ${prod.badgeText || prod.otcClass}
+            </span>
+            <h5 class="text-sm font-extrabold text-slate-900 leading-snug line-clamp-2">${prod.brand}</h5>
+            <p class="text-xs text-teal-800 font-semibold truncate">${prod.activeText}</p>
+            <p class="text-[11px] text-slate-500 font-medium">${prod.priceEst} · ${prod.form}</p>
+          </div>
         </div>
       `;
     }
 
     function getOtcBadgeHtml(otcClass) {
       if (otcClass === 'General Sale') {
-        return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>General Sale (마트·약국 자유구매)</span>`;
+        return `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>마트·약국 자유구매</span>`;
       }
       if (otcClass === 'Pharmacy Only') {
-        return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-sky-50 text-sky-800 border border-sky-200"><span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>Pharmacy Only (약국 전용)</span>`;
+        return `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-50 text-sky-800 border border-sky-200"><span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>약국 전용 (Pharmacy Only)</span>`;
       }
-      return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-900 border border-amber-300"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Pharmacist Only (약사 상담 구매)</span>`;
+      return `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-900 border border-amber-300"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>약사 상담 (Pharmacist Only)</span>`;
     }
 
     function showToast(msg) {
@@ -1653,7 +1887,7 @@
         return `
           <button
             data-bodycat="${cat.id}"
-            class="body-cat-btn px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5 ${
+            class="body-cat-btn px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5 ${
               active
                 ? 'bg-slate-900 text-white shadow-xs'
                 : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
@@ -1683,14 +1917,14 @@
         return `
           <button
             data-symid="${sym.id}"
-            class="symptom-chip px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold border flex items-center gap-1.5 ${
+            class="symptom-chip px-3.5 py-2 rounded-xl text-xs font-bold border flex items-center gap-1.5 ${
               isSelected
-                ? 'bg-teal-700 text-white border-teal-700 shadow-sm ring-2 ring-teal-500/30'
-                : 'bg-white hover:bg-teal-50/60 text-slate-700 border-slate-200'
+                ? 'bg-teal-700 text-white border-teal-700 shadow-xs'
+                : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200'
             }"
           >
             <span>${isSelected ? '✓' : '+'}</span>
-            <span>${sym.label}</span>
+            <span>${sym.label.split(' (')[0]}</span>
           </button>
         `;
       }).join('');
@@ -1712,20 +1946,14 @@
     function computeMatchedIngredients() {
       const q = state.symptomSearchQuery.trim().toLowerCase();
       const allProducts = getAllProducts();
+      const nlp = analyzeUserSentence(state.symptomSearchQuery);
 
-      const textMatchedSymptomIds = new Set();
-      if (q) {
-        SYMPTOMS.forEach(sym => {
-          if (
-            sym.label.toLowerCase().includes(q) ||
-            sym.keywords.some(k => k.toLowerCase().includes(q) || q.includes(k.toLowerCase()))
-          ) {
-            textMatchedSymptomIds.add(sym.id);
-          }
-        });
-      }
-
-      const activeSymptomSet = new Set([...state.selectedSymptoms, ...textMatchedSymptomIds]);
+      // If user typed a natural sentence that detected specific symptoms, prioritize those symptoms!
+      const activeSymptomSet = new Set(
+        nlp.inferredSymptomIds.length > 0
+          ? nlp.inferredSymptomIds
+          : state.selectedSymptoms
+      );
 
       return INGREDIENTS.map(ing => {
         const matchedSyms = ing.symptoms.filter(s => activeSymptomSet.has(s));
@@ -1744,13 +1972,17 @@
           if (hay.includes(q)) textDirectMatch = true;
         }
 
-        const score = matchedSyms.length * 10 + (textDirectMatch ? 8 : 0);
+        let score = matchedSyms.length * 12 + (textDirectMatch ? 10 : 0);
+        if (nlp.boostIngIds.has(ing.id)) score += 35;
+        if (nlp.penalizeIngIds.has(ing.id)) score = 0;
+
         return {
           ing,
           matchedSyms,
           ingProds,
           score,
-          textDirectMatch
+          textDirectMatch,
+          nlp
         };
       })
       .filter(item => {
@@ -1761,95 +1993,154 @@
       .sort((a, b) => b.score - a.score);
     }
 
-    function renderSynergyRegimenBanner(matchedList) {
-      const box = document.getElementById('synergyRegimenBox');
-      const selectedLabels = state.selectedSymptoms.map(id => getSymptomById(id)?.label.split(' (')[0]).filter(Boolean);
+    function renderNlpAndSynergyBanners(matchedList) {
+      const nlpBox = document.getElementById('nlpAnalysisResultBox');
+      const synergyBox = document.getElementById('synergyRegimenBox');
+      const nlp = analyzeUserSentence(state.symptomSearchQuery);
 
-      if (state.selectedSymptoms.length === 0 && !state.symptomSearchQuery.trim()) {
-        box.innerHTML = `
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      // 1. Render Natural Sentence Analysis Banner if user typed text
+      if (nlp.hasText) {
+        const detectedLabels = nlp.inferredSymptomIds
+          .map(id => getSymptomById(id)?.label.split(' (')[0])
+          .filter(Boolean);
+
+        const primaryRule = nlp.matchedRules[0];
+
+        nlpBox.classList.remove('hidden');
+        nlpBox.innerHTML = `
+          <div class="space-y-2.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full bg-emerald-400 text-slate-950 text-xs font-extrabold">🧠 문장 증상 파악 완료</span>
+                <span class="text-xs sm:text-sm font-bold text-emerald-200">입력하신 문장에서 핵심 증상을 추출했습니다</span>
+              </div>
+              <button id="syncNlpTagsBtn" class="px-3 py-1 rounded-lg bg-white/15 hover:bg-white/25 text-white text-xs font-bold transition">
+                이 증상들로 선택 태그 고정하기 ✓
+              </button>
+            </div>
+
+            ${detectedLabels.length > 0 ? `
+              <div class="flex flex-wrap items-center gap-1.5 pt-1">
+                <span class="text-xs text-emerald-200 font-semibold">파악된 증상:</span>
+                ${detectedLabels.map(lbl => `<span class="px-2.5 py-1 rounded-lg bg-white text-teal-950 text-xs font-extrabold shadow-2xs">✓ ${lbl}</span>`).join('')}
+              </div>
+            ` : `
+              <p class="text-xs text-emerald-100">입력하신 키워드("${state.symptomSearchQuery}")와 일치하는 성분 및 제품을 아래에 표시합니다.</p>
+            `}
+
+            ${primaryRule ? `
+              <div class="mt-2 p-3.5 rounded-xl bg-black/25 border border-emerald-400/30 space-y-1">
+                <div class="text-xs sm:text-sm font-extrabold text-emerald-300">💡 맞춤 복약 가이드: ${primaryRule.title}</div>
+                <p class="text-xs sm:text-sm text-white/95 leading-relaxed">${primaryRule.advice}</p>
+              </div>
+            ` : ''}
+          </div>
+        `;
+
+        const syncBtn = document.getElementById('syncNlpTagsBtn');
+        if (syncBtn) {
+          syncBtn.addEventListener('click', () => {
+            if (nlp.inferredSymptomIds.length > 0) {
+              state.selectedSymptoms = nlp.inferredSymptomIds;
+              renderSymptomChips();
+              showToast('문장에서 파악된 증상 태그가 고정 적용되었습니다.');
+            }
+          });
+        }
+      } else {
+        nlpBox.classList.add('hidden');
+      }
+
+      // 2. Render Clean, Scannable Synergy Summary Box
+      const effectiveSymptomIds = (nlp.hasText && nlp.inferredSymptomIds.length > 0)
+        ? nlp.inferredSymptomIds
+        : state.selectedSymptoms;
+
+      const selectedLabels = effectiveSymptomIds.map(id => getSymptomById(id)?.label.split(' (')[0]).filter(Boolean);
+
+      if (effectiveSymptomIds.length === 0 && !nlp.hasText) {
+        synergyBox.innerHTML = `
+          <div class="flex items-center justify-between gap-4">
             <div>
-              <span class="text-xs font-bold uppercase tracking-wider text-emerald-300">💡 맞춤 복용 설계 가이드</span>
-              <h4 class="text-base sm:text-lg font-bold mt-0.5">위에서 현재 겪고 있는 증상 버튼을 1개 이상 선택해 보세요!</h4>
-              <p class="text-xs sm:text-sm text-emerald-100/85 mt-1">선택한 증상들을 가장 효과적으로 해결하는 1순위 추천 성분과, 서로 다른 약리 기전으로 함께 복용하면 시너지가 나는 조합 및 피해야 할 중복 약물을 자동으로 설계해 드립니다.</p>
+              <span class="text-xs font-extrabold text-teal-700 uppercase">맞춤 복용 설계</span>
+              <h4 class="text-base font-extrabold text-slate-900 mt-0.5">위 검색창에 불편한 증상을 문장으로 적거나 증상 버튼을 선택해 주세요.</h4>
+              <p class="text-xs sm:text-sm text-slate-600 mt-1">증상에 꼭 맞는 1순위 성분과 서로 다른 기전의 시너지 조합, 피해야 할 중복 약물을 바로 정리해 드립니다.</p>
             </div>
           </div>
         `;
         return;
       }
 
-      const topIngs = matchedList.slice(0, 4).map(m => m.ing);
-      const topNames = topIngs.map(i => i.nameKo.split(' (')[0]).join(' · ');
+      const topIngs = matchedList.slice(0, 3).map(m => m.ing);
+      const primary = topIngs[0];
+      const partner = topIngs.slice(1).find(candidate => {
+        const isAvoided = primary.avoidWith.some(av => av.id === candidate.id) || candidate.avoidWith.some(av => av.id === primary.id);
+        return !isAvoided;
+      });
 
-      let recommendedPairHtml = '';
-      if (topIngs.length >= 2) {
-        const primary = topIngs[0];
-        const partner = topIngs.slice(1).find(candidate => {
-          const isAvoided = primary.avoidWith.some(av => av.id === candidate.id) || candidate.avoidWith.some(av => av.id === primary.id);
-          return !isAvoided;
-        });
+      const explicitSynergy = (primary && partner)
+        ? (primary.synergyWith.find(s => s.id === partner.id) || partner.synergyWith.find(s => s.id === primary.id))
+        : null;
 
-        if (partner) {
-          const explicitSynergy = primary.synergyWith.find(s => s.id === partner.id) || partner.synergyWith.find(s => s.id === primary.id);
-          recommendedPairHtml = `
-            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div class="bg-white/10 backdrop-blur-xs rounded-xl p-3.5 border border-emerald-400/30">
-                <div class="flex items-center gap-2 text-emerald-300 font-bold text-xs uppercase tracking-wider">
-                  <span>✅ 추천 시너지 병용 조합 (서로 다른 기전)</span>
+      synergyBox.innerHTML = `
+        <div class="space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100">
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span class="text-xs font-extrabold px-2.5 py-1 rounded-lg bg-teal-700 text-white">현재 타겟 증상</span>
+              ${selectedLabels.map(lbl => `<span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-teal-50 text-teal-900 border border-teal-200">${lbl}</span>`).join('')}
+            </div>
+            <span class="text-xs font-bold text-slate-500">추천 성분 ${matchedList.length}종 매칭</span>
+          </div>
+
+          ${primary ? `
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200 space-y-1.5">
+                <div class="text-xs font-extrabold text-emerald-800 flex items-center gap-1.5">
+                  <span>✅</span><span>추천 시너지 조합 (서로 다른 기전으로 효과 극대화)</span>
                 </div>
-                <p class="text-sm font-extrabold text-white mt-1">
-                  ${primary.nameKo} + ${partner.nameKo}
-                </p>
-                <p class="text-xs text-emerald-100/90 mt-1 leading-relaxed">
-                  ${explicitSynergy ? explicitSynergy.reason : `두 성분은 작용 타겟(${primary.drugClass.split(' (')[0]} vs ${partner.drugClass.split(' (')[0]})이 서로 달라 함께 복용 시 성분 중복 없이 각 증상을 동시에 효과적으로 완화합니다.`}
-                </p>
-              </div>
-              <div class="bg-rose-950/60 backdrop-blur-xs rounded-xl p-3.5 border border-rose-400/30">
-                <div class="flex items-center gap-2 text-rose-300 font-bold text-xs uppercase tracking-wider">
-                  <span>⛔ 절대 함께 먹으면 안 되는 중복/충돌 주의</span>
+                <div class="text-sm sm:text-base font-extrabold text-slate-900">
+                  1순위: ${primary.nameKo.split(' (')[0]} ${partner ? ` + ${partner.nameKo.split(' (')[0]}` : ''}
                 </div>
-                <p class="text-xs text-rose-100/95 mt-1.5 leading-relaxed">
+                <p class="text-xs text-slate-700 leading-relaxed">
                   ${
-                    primary.avoidWith.length > 0
-                      ? primary.avoidWith.map(a => `• <strong>${getIngredientById(a.id)?.nameKo.split(' (')[0] || a.id}:</strong> ${a.reason}`).join('<br/>')
-                      : '• 종합감기약(Lemsip, Codral)이나 복합진통제(Maxigesic)와 단일 진통제(Panadol, Nurofen)를 동시에 드실 때는 포장 뒷면의 Active Ingredients 중복 여부를 꼭 확인하세요.'
+                    explicitSynergy
+                      ? explicitSynergy.reason
+                      : partner
+                        ? `두 성분은 작용 기전(${primary.drugClass.split(' (')[0]} vs ${partner.drugClass.split(' (')[0]})이 서로 달라 성분 중복 없이 함께 사용할 수 있습니다.`
+                        : primary.whenToUse
                   }
                 </p>
               </div>
-            </div>
-          `;
-        }
-      }
 
-      box.innerHTML = `
-        <div>
-          <div class="flex flex-wrap items-center justify-between gap-2">
-            <div class="flex flex-wrap items-center gap-1.5">
-              <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-400 text-slate-950">선택된 증상 (${selectedLabels.length || '검색어 매칭'})</span>
-              ${selectedLabels.map(lbl => `<span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-white/15 text-white">${lbl}</span>`).join('')}
-              ${state.symptomSearchQuery ? `<span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-200 border border-amber-300/30">검색: "${state.symptomSearchQuery}"</span>` : ''}
+              <div class="p-4 rounded-2xl bg-rose-50/70 border border-rose-200 space-y-1.5">
+                <div class="text-xs font-extrabold text-rose-800 flex items-center gap-1.5">
+                  <span>⛔</span><span>함께 쓰면 안 되는 성분 / 주의사항</span>
+                </div>
+                <div class="text-xs text-rose-950 leading-relaxed space-y-1">
+                  ${
+                    primary.avoidWith.length > 0
+                      ? primary.avoidWith.map(a => `<div>• <strong>${getIngredientById(a.id)?.nameKo.split(' (')[0] || a.id}:</strong> ${a.reason}</div>`).join('')
+                      : `<div>• ${primary.warnings}</div>`
+                  }
+                </div>
+              </div>
             </div>
-            <span class="text-xs text-emerald-200 font-medium">총 ${matchedList.length}개 핵심 성분 매칭됨</span>
-          </div>
-          <h4 class="text-base sm:text-lg font-extrabold mt-2.5">
-            맞춤 타겟 성분: <span class="text-emerald-300">${topNames || '매칭된 성분을 확인하세요'}</span>
-          </h4>
-          ${recommendedPairHtml}
+          ` : ''}
         </div>
       `;
     }
 
     function renderSymptomResults() {
       const matchedList = computeMatchedIngredients();
-      renderSynergyRegimenBanner(matchedList);
+      renderNlpAndSynergyBanners(matchedList);
 
       const container = document.getElementById('symptomResultsContainer');
       const countTitle = document.getElementById('symptomResultTitle');
-      countTitle.textContent = `맞춤 추천 성분 및 뉴질랜드 약국 판매 제품 (${matchedList.length}개 성분 그룹)`;
+      countTitle.textContent = `맞춤 추천 성분 및 뉴질랜드 약국 제품 (${matchedList.length}개 성분군)`;
 
       if (matchedList.length === 0) {
         container.innerHTML = `
-          <div class="bg-white rounded-2xl border border-slate-200 p-8 text-center space-y-3">
+          <div class="bg-white rounded-3xl border border-slate-200 p-8 text-center space-y-3">
             <div class="text-3xl">🔍</div>
             <h4 class="text-base font-bold text-slate-800">조건에 맞는 성분이나 제품을 찾지 못했습니다.</h4>
             <p class="text-xs text-slate-500">검색어를 지우거나 구매 등급 필터를 '전체 등급'으로 변경해 보세요.</p>
@@ -1871,131 +2162,145 @@
         return;
       }
 
-      container.innerHTML = matchedList.map(({ ing, matchedSyms, ingProds }) => {
+      // Redesigned Clean, High-Readability Ingredient & Product Cards
+      container.innerHTML = matchedList.map(({ ing, matchedSyms, ingProds }, idx) => {
         const inChecker = state.checkerSelectedIds.includes(ing.id);
         const matchedSymBadges = matchedSyms.map(sId => {
           const sym = getSymptomById(sId);
-          return sym ? `<span class="px-2 py-0.5 rounded-md bg-teal-100 text-teal-900 font-bold text-[11px]">✓ ${sym.label.split(' (')[0]}</span>` : '';
+          return sym ? `<span class="px-2.5 py-0.5 rounded-lg bg-teal-100 text-teal-900 font-extrabold text-xs">✓ ${sym.label.split(' (')[0]}</span>` : '';
         }).join('');
 
-        const allSymBadges = ing.symptoms
-          .filter(sId => !matchedSyms.includes(sId))
-          .map(sId => {
-            const sym = getSymptomById(sId);
-            return sym ? `<span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px]">${sym.label.split(' (')[0]}</span>` : '';
-          }).join('');
-
         return `
-          <article class="bg-white rounded-2xl shadow-xs border border-slate-200/90 overflow-hidden card-hover">
-            <div class="p-5 sm:p-6 border-b border-slate-100 bg-gradient-to-r from-slate-50 via-white to-teal-50/30">
-              <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-                <div class="space-y-2">
-                  <div class="flex flex-wrap items-center gap-2">
-                    <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-teal-900 text-white">${ing.drugClass}</span>
+          <article class="bg-white rounded-3xl shadow-xs border border-slate-200/90 overflow-hidden card-hover">
+            <!-- Step 1: Clear Header & Core Summary -->
+            <div class="p-5 sm:p-6 border-b border-slate-100">
+              <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                <div class="space-y-1.5">
+                  <div class="flex flex-wrap items-center gap-1.5">
+                    <span class="px-2.5 py-0.5 rounded-lg text-xs font-extrabold bg-slate-900 text-white">추천 ${idx + 1}순위</span>
+                    <span class="px-2.5 py-0.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-700">${ing.drugClass.split(' (')[0]}</span>
                     ${matchedSymBadges}
-                    ${allSymBadges}
                   </div>
-                  <h4 class="text-lg sm:text-xl font-extrabold text-slate-900">
-                    ${ing.nameKo} <span class="text-sm sm:text-base font-semibold text-teal-700">(${ing.nameEn})</span>
+                  <h4 class="text-lg sm:text-xl font-extrabold text-slate-900 pt-1">
+                    ${ing.nameKo} <span class="text-sm font-semibold text-teal-700">(${ing.nameEn})</span>
                   </h4>
-                  <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
-                    <strong class="text-slate-900">언제 어떻게 쓰나요?</strong> ${ing.whenToUse}
-                  </p>
                 </div>
-                <div class="flex items-center gap-2 shrink-0">
-                  <button
-                    data-checkertoggle="${ing.id}"
-                    class="checker-toggle-btn px-3.5 py-2 rounded-xl text-xs font-bold border transition flex items-center gap-1.5 ${
-                      inChecker
-                        ? 'bg-amber-100 border-amber-400 text-amber-950'
-                        : 'bg-white hover:bg-slate-100 border-slate-300 text-slate-700'
-                    }"
-                  >
-                    <span>⚖️</span>
-                    <span>${inChecker ? '병용 체커에 담김 ✓' : '병용 체커에 담기'}</span>
-                  </button>
+                <button
+                  data-checkertoggle="${ing.id}"
+                  class="checker-toggle-btn self-start px-3.5 py-2 rounded-xl text-xs font-bold border transition flex items-center gap-1.5 shrink-0 ${
+                    inChecker
+                      ? 'bg-amber-100 border-amber-400 text-amber-950'
+                      : 'bg-slate-50 hover:bg-slate-100 border-slate-300 text-slate-700'
+                  }"
+                >
+                  <span>⚖️</span>
+                  <span>${inChecker ? '병용 체커 담김 ✓' : '+ 병용 체커 담기'}</span>
+                </button>
+              </div>
+
+              <!-- Scannable 2-Column Core Digest -->
+              <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3 text-xs sm:text-sm">
+                <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/70">
+                  <span class="font-extrabold text-slate-900 block mb-1">💡 언제·왜 쓰나요? (핵심 역할)</span>
+                  <p class="text-slate-700 leading-relaxed">${ing.whenToUse}</p>
+                </div>
+                <div class="p-3.5 rounded-2xl bg-teal-50/50 border border-teal-200/70">
+                  <span class="font-extrabold text-teal-950 block mb-1">⚡ 예상 효과 & 복용법</span>
+                  <p class="text-slate-700 leading-relaxed">${ing.expectedEffect}</p>
+                  <p class="text-xs text-teal-800 font-semibold mt-1">복용 기준: ${ing.dosingInfo}</p>
                 </div>
               </div>
 
-              <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-                <div class="p-3.5 rounded-xl bg-sky-50/70 border border-sky-200/80 space-y-1">
-                  <div class="font-extrabold text-sky-900 flex items-center gap-1.5">
-                    <span>🔬</span><span>작동 기전 (왜 이런 효과가 나는가?)</span>
-                  </div>
-                  <p class="text-slate-700 leading-relaxed">${ing.mechanism}</p>
-                </div>
-                <div class="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200/80 space-y-1">
-                  <div class="font-extrabold text-emerald-900 flex items-center gap-1.5">
-                    <span>⚡</span><span>예상 효과 및 복용 간격</span>
-                  </div>
-                  <p class="text-slate-700 leading-relaxed"><strong>예상 효과:</strong> ${ing.expectedEffect}</p>
-                  <p class="text-slate-600 leading-relaxed pt-1"><strong>표준 복용법:</strong> ${ing.dosingInfo}</p>
-                </div>
-                <div class="p-3.5 rounded-xl bg-amber-50/60 border border-amber-200/80 space-y-1.5">
-                  <div class="font-extrabold text-emerald-800 flex items-center gap-1">
-                    <span>✅</span><span>같이 쓰면 좋은 성분 (다른 기전 시너지)</span>
-                  </div>
-                  <div class="space-y-1 text-slate-700">
-                    ${ing.synergyWith.map(syn => {
-                      const target = getIngredientById(syn.id);
-                      return `<div>• <button data-jump-ing="${syn.id}" class="jump-ing-btn font-bold text-teal-800 underline hover:text-teal-600">${target ? target.nameKo.split(' (')[0] : syn.id}</button>: ${syn.reason}</div>`;
-                    }).join('')}
-                  </div>
+              <!-- Compact Synergy & Avoid Pills + Expandable Deep Pharmacology Details -->
+              <div class="mt-3.5 flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-100 text-xs">
+                <div class="flex flex-wrap items-center gap-2">
+                  ${ing.synergyWith.length > 0 ? `
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-900 border border-emerald-200 font-bold">
+                      ✅ 시너지 병용: ${ing.synergyWith.map(s => getIngredientById(s.id)?.nameKo.split(' (')[0] || s.id).join(', ')}
+                    </span>
+                  ` : ''}
                   ${ing.avoidWith.length > 0 ? `
-                    <div class="font-extrabold text-rose-800 flex items-center gap-1 pt-1.5 border-t border-amber-200/70">
-                      <span>⛔</span><span>같이 쓰면 안 되는 성분 (병용 금기/주의)</span>
-                    </div>
-                    <div class="space-y-1 text-rose-900">
-                      ${ing.avoidWith.map(av => {
-                        const target = getIngredientById(av.id);
-                        return `<div>• <strong>${target ? target.nameKo.split(' (')[0] : av.id}:</strong> ${av.reason}</div>`;
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-rose-50 text-rose-900 border border-rose-200 font-bold">
+                      ⛔ 병용 금기: ${ing.avoidWith.map(a => getIngredientById(a.id)?.nameKo.split(' (')[0] || a.id).join(', ')}
+                    </span>
+                  ` : ''}
+                </div>
+                <button
+                  data-toggle-detail="detail-${ing.id}"
+                  class="detail-toggle-btn text-xs font-extrabold text-teal-700 hover:text-teal-900 flex items-center gap-1 px-2.5 py-1 rounded-lg hover:bg-teal-50 transition"
+                >
+                  <span>🔬 자세한 작용 기전 및 병용 이유 펼치기</span><span>▼</span>
+                </button>
+              </div>
+
+              <!-- Collapsible Deep Pharmacology Box (Progressive Disclosure for Clean UI) -->
+              <div id="detail-${ing.id}" class="hidden mt-3 pt-3 border-t border-slate-200/80 grid grid-cols-1 md:grid-cols-2 gap-3 text-xs animate-fade-in">
+                <div class="p-3.5 rounded-2xl bg-sky-50/70 border border-sky-200 space-y-1">
+                  <div class="font-extrabold text-sky-950">🔬 상세 약리 기전 (우리 몸에서 어떻게 작용하는가?)</div>
+                  <p class="text-slate-700 leading-relaxed">${ing.mechanism}</p>
+                  <p class="text-amber-900 font-semibold pt-1">⚠️ 주의: ${ing.warnings}</p>
+                </div>
+                <div class="p-3.5 rounded-2xl bg-amber-50/50 border border-amber-200 space-y-2">
+                  <div>
+                    <div class="font-extrabold text-emerald-900">✅ 다른 기전이라 같이 쓰면 좋은 이유</div>
+                    <div class="space-y-1 text-slate-700 mt-1">
+                      ${ing.synergyWith.map(syn => {
+                        const target = getIngredientById(syn.id);
+                        return `<div>• <button data-jump-ing="${syn.id}" class="jump-ing-btn font-bold text-teal-800 underline">${target ? target.nameKo.split(' (')[0] : syn.id}</button>: ${syn.reason}</div>`;
                       }).join('')}
                     </div>
-                  ` : `
-                    <div class="text-emerald-800 font-medium pt-1 border-t border-amber-200/70">
-                      • 주요 일반의약품과 심각한 중복 충돌이 적은 안전한 기전입니다. (${ing.warnings})
+                  </div>
+                  ${ing.avoidWith.length > 0 ? `
+                    <div class="pt-1.5 border-t border-amber-200/80">
+                      <div class="font-extrabold text-rose-900">⛔ 같이 쓰면 안 되는 이유</div>
+                      <div class="space-y-1 text-rose-950 mt-1">
+                        ${ing.avoidWith.map(av => {
+                          const target = getIngredientById(av.id);
+                          return `<div>• <strong>${target ? target.nameKo.split(' (')[0] : av.id}:</strong> ${av.reason}</div>`;
+                        }).join('')}
+                      </div>
                     </div>
-                  `}
+                  ` : ''}
                 </div>
               </div>
             </div>
 
-            <div class="p-5 sm:p-6 bg-white">
+            <!-- Step 2: NZ Pharmacy Products for this Ingredient -->
+            <div class="p-5 sm:p-6 bg-slate-50/50">
               <div class="flex items-center justify-between mb-3">
                 <h5 class="text-xs sm:text-sm font-extrabold text-slate-800 flex items-center gap-1.5">
                   <span>🇳🇿</span>
-                  <span>이 성분이 들어간 뉴질랜드 약국 추천 제품 (${ingProds.length}종)</span>
+                  <span>뉴질랜드 약국 실제 판매 제품 (${ingProds.length}종)</span>
                 </h5>
-                <span class="text-[11px] text-slate-500">Chemist Warehouse · Unichem Pharmacy 판매 제품</span>
+                <span class="text-[11px] text-slate-500">Chemist Warehouse · Unichem Pharmacy</span>
               </div>
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 ${ingProds.map(prod => {
                   const inCabinet = state.myCabinetIds.includes(prod.id);
                   return `
-                    <div class="rounded-xl border border-slate-200 p-3.5 flex flex-col justify-between gap-3 bg-slate-50/40 hover:bg-white transition">
+                    <div class="rounded-2xl border border-slate-200/90 p-4 flex flex-col justify-between gap-3 bg-white shadow-2xs">
                       <div class="space-y-2.5">
                         ${renderProductVisualBox(prod)}
-                        <div class="flex flex-wrap items-center justify-between gap-1 pt-1">
-                          ${getOtcBadgeHtml(prod.otcClass)}
-                          <span class="text-[11px] font-semibold text-slate-500">${prod.form}</span>
-                        </div>
                         <p class="text-xs text-slate-600 leading-relaxed">${prod.summary}</p>
                       </div>
-                      <div class="pt-2 border-t border-slate-200/70 flex items-center justify-between gap-2">
-                        <a
-                          href="${prod.storeUrl}"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          class="text-xs font-bold text-teal-700 hover:text-teal-900 hover:underline flex items-center gap-1"
-                        >
-                          <span>🛒 ${prod.storeName} 상세/가격</span><span>↗</span>
-                        </a>
+                      <div class="pt-2.5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
+                        <div class="flex items-center gap-2">
+                          ${getOtcBadgeHtml(prod.otcClass)}
+                          <a
+                            href="${prod.storeUrl}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="text-xs font-extrabold text-teal-700 hover:text-teal-900 hover:underline"
+                          >
+                            약국 보기 ↗
+                          </a>
+                        </div>
                         <button
                           data-cabinet-toggle="${prod.id}"
                           class="cabinet-toggle-btn px-2.5 py-1 rounded-lg text-[11px] font-bold border transition ${
                             inCabinet
                               ? 'bg-emerald-100 border-emerald-400 text-emerald-900'
-                              : 'bg-white hover:bg-slate-100 border-slate-300 text-slate-600'
+                              : 'bg-slate-50 hover:bg-slate-100 border-slate-300 text-slate-600'
                           }"
                         >
                           ${inCabinet ? '⭐ 내 약장 보관중' : '+ 내 약장 담기'}
@@ -2035,23 +2340,23 @@
 
         return `
           <tr data-scroll-ing="ing-card-${ing.id}" class="ing-table-row hover:bg-teal-50/50 cursor-pointer transition">
-            <td class="py-3 px-4 align-top">
+            <td class="py-3.5 px-4 align-top">
               <div class="font-extrabold text-slate-900">${ing.nameKo}</div>
               <div class="text-xs text-teal-700 font-medium">${ing.nameEn}</div>
             </td>
-            <td class="py-3 px-4 align-top">
-              <span class="inline-block px-2 py-0.5 rounded bg-slate-100 text-slate-800 font-semibold text-xs">${ing.drugClass}</span>
+            <td class="py-3.5 px-4 align-top">
+              <span class="inline-block px-2 py-0.5 rounded bg-slate-100 text-slate-800 font-semibold text-xs">${ing.drugClass.split(' (')[0]}</span>
             </td>
-            <td class="py-3 px-4 align-top text-xs text-slate-700 max-w-xs leading-relaxed">
-              ${ing.mechanism}
+            <td class="py-3.5 px-4 align-top text-xs text-slate-700 max-w-xs leading-relaxed">
+              ${ing.whenToUse}
             </td>
-            <td class="py-3 px-4 align-top text-xs text-emerald-800 font-medium">
+            <td class="py-3.5 px-4 align-top text-xs text-emerald-800 font-medium">
               ${synNames ? `<span class="inline-block px-2 py-0.5 rounded bg-emerald-50 border border-emerald-200">✅ ${synNames}</span>` : '-'}
             </td>
-            <td class="py-3 px-4 align-top text-xs text-rose-800 font-medium">
+            <td class="py-3.5 px-4 align-top text-xs text-rose-800 font-medium">
               ${avoidNames ? `<span class="inline-block px-2 py-0.5 rounded bg-rose-50 border border-rose-200">⛔ ${avoidNames}</span>` : '<span class="text-slate-400">중복 충돌 낮음</span>'}
             </td>
-            <td class="py-3 px-4 align-top text-center">
+            <td class="py-3.5 px-4 align-top text-center">
               <button
                 data-checkertoggle="${ing.id}"
                 class="checker-toggle-btn px-2.5 py-1 rounded-lg text-xs font-bold border ${
@@ -2084,11 +2389,11 @@
         const inChecker = state.checkerSelectedIds.includes(ing.id);
 
         return `
-          <div id="ing-card-${ing.id}" class="bg-white rounded-2xl shadow-xs border border-slate-200 p-5 flex flex-col justify-between gap-4 card-hover">
+          <div id="ing-card-${ing.id}" class="bg-white rounded-3xl shadow-xs border border-slate-200 p-5 flex flex-col justify-between gap-4 card-hover">
             <div class="space-y-3">
               <div class="flex items-start justify-between gap-2">
                 <div>
-                  <span class="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-teal-50 text-teal-800 border border-teal-200">${ing.drugClass}</span>
+                  <span class="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-teal-50 text-teal-800 border border-teal-200">${ing.drugClass.split(' (')[0]}</span>
                   <h4 class="text-base sm:text-lg font-extrabold text-slate-900 mt-1.5">${ing.nameKo}</h4>
                   <p class="text-xs font-semibold text-teal-700">${ing.nameEn}</p>
                 </div>
@@ -2104,7 +2409,7 @@
                 </button>
               </div>
 
-              <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80 text-xs space-y-1.5">
+              <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 text-xs space-y-2">
                 <div><strong class="text-slate-900">📌 사용 상황:</strong> <span class="text-slate-700">${ing.whenToUse}</span></div>
                 <div><strong class="text-sky-900">🔬 작용 기전:</strong> <span class="text-slate-700">${ing.mechanism}</span></div>
                 <div><strong class="text-emerald-900">⚡ 예상 효과:</strong> <span class="text-slate-700">${ing.expectedEffect}</span></div>
@@ -2112,13 +2417,13 @@
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
-                <div class="p-3 rounded-xl bg-emerald-50/70 border border-emerald-200">
+                <div class="p-3 rounded-2xl bg-emerald-50/70 border border-emerald-200">
                   <div class="font-bold text-emerald-900 mb-1">✅ 시너지 병용 추천 (다른 기전)</div>
                   <ul class="space-y-1 text-slate-700">
                     ${ing.synergyWith.map(s => `<li>• <strong>${getIngredientById(s.id)?.nameKo.split(' (')[0] || s.id}:</strong> ${s.reason}</li>`).join('')}
                   </ul>
                 </div>
-                <div class="p-3 rounded-xl bg-rose-50/70 border border-rose-200">
+                <div class="p-3 rounded-2xl bg-rose-50/70 border border-rose-200">
                   <div class="font-bold text-rose-900 mb-1">⛔ 병용 금기 / 중복 주의</div>
                   ${
                     ing.avoidWith.length > 0
@@ -2132,7 +2437,7 @@
             <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs">
               <div class="flex flex-wrap items-center gap-1.5">
                 <span class="font-bold text-slate-600">대표 NZ 제품:</span>
-                ${prods.map(p => `<a href="${p.storeUrl}" target="_blank" rel="noopener noreferrer" class="px-2 py-0.5 rounded bg-teal-50 hover:bg-teal-100 text-teal-800 font-semibold border border-teal-200">${p.brand.split(' ')[0]} ↗</a>`).join('')}
+                ${prods.map(p => `<a href="${p.storeUrl}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-0.5 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-800 font-semibold border border-teal-200">${p.brand.split(' ')[0]} ↗</a>`).join('')}
               </div>
               <a href="${ing.healthifyUrl}" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-teal-700 underline">공식 의약품 정보 ↗</a>
             </div>
@@ -2165,9 +2470,9 @@
         return `
           <button
             data-checkertoggle="${ing.id}"
-            class="checker-toggle-btn w-full text-left p-3 rounded-xl border transition flex items-center justify-between gap-2 ${
+            class="checker-toggle-btn w-full text-left p-3 rounded-2xl border transition flex items-center justify-between gap-2 ${
               isSelected
-                ? 'bg-teal-900 text-white border-teal-900 shadow-xs'
+                ? 'bg-teal-800 text-white border-teal-800 shadow-xs'
                 : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-200'
             }"
           >
@@ -2193,9 +2498,9 @@
         tray.innerHTML = `<span class="text-xs text-slate-400">왼쪽 목록에서 함께 복용할 약이나 성분을 2개 이상 클릭해 주세요.</span>`;
       } else {
         tray.innerHTML = selectedIngs.map(ing => `
-          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-teal-900 text-white text-xs font-bold shadow-xs">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-teal-800 text-white text-xs font-bold shadow-xs">
             <span>💊 ${ing.nameKo.split(' (')[0]}</span>
-            <button data-checkertoggle="${ing.id}" class="checker-toggle-btn text-emerald-300 hover:text-white font-extrabold ml-1" title="제거">✕</button>
+            <button data-checkertoggle="${ing.id}" class="checker-toggle-btn text-emerald-200 hover:text-white font-extrabold ml-1" title="제거">✕</button>
           </span>
         `).join('');
       }
@@ -2260,7 +2565,7 @@
               <span class="px-2.5 py-0.5 rounded-full bg-rose-500 text-white text-xs font-extrabold uppercase">⛔ 병용 금기 / 중복 위험 감지 (${conflicts.length}건)</span>
             </div>
             <h4 class="text-base sm:text-lg font-extrabold text-rose-200">이 조합은 함께 복용하면 안 되거나 성분 과량 위험이 있습니다!</h4>
-            <p class="text-xs sm:text-sm text-rose-100/90">동일한 성분이 중복되어 일일 허용량을 초과하거나, 같은 계열(NSAID 또는 항히스타민 등)이 겹쳐 부작용 위험이 커집니다. 아래 상세 분석을 확인하세요.</p>
+            <p class="text-xs sm:text-sm text-rose-100/90">동일한 성분이 중복되어 일일 허용량을 초과하거나, 같은 계열(NSAID 또는 항히스타민 등)이 겹쳐 부작용 위험이 커집니다.</p>
           </div>
         `;
       } else if (synergies.length > 0) {
@@ -2290,7 +2595,7 @@
 
         <div class="space-y-3">
           ${conflicts.map(c => `
-            <div class="p-4 rounded-xl bg-rose-50 border border-rose-300 space-y-1.5">
+            <div class="p-4 rounded-2xl bg-rose-50 border border-rose-300 space-y-1.5">
               <div class="flex items-center justify-between">
                 <span class="text-xs sm:text-sm font-extrabold text-rose-900">⛔ [병용 금기/주의] ${c.a.nameKo.split(' (')[0]} × ${c.b.nameKo.split(' (')[0]}</span>
                 <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-rose-200 text-rose-900">중복/충돌</span>
@@ -2300,7 +2605,7 @@
           `).join('')}
 
           ${synergies.map(s => `
-            <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-300 space-y-1.5">
+            <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-300 space-y-1.5">
               <div class="flex items-center justify-between">
                 <span class="text-xs sm:text-sm font-extrabold text-emerald-950">✅ [시너지 추천] ${s.a.nameKo.split(' (')[0]} + ${s.b.nameKo.split(' (')[0]}</span>
                 <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-200 text-emerald-900">다른 기전 시너지</span>
@@ -2310,7 +2615,7 @@
           `).join('')}
 
           ${neutrals.map(n => `
-            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
               <div class="flex items-center justify-between">
                 <span class="text-xs sm:text-sm font-bold text-slate-800">ℹ️ [병용 가능] ${n.a.nameKo.split(' (')[0]} + ${n.b.nameKo.split(' (')[0]}</span>
                 <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-200 text-slate-700">독립 기전</span>
@@ -2320,7 +2625,7 @@
           `).join('')}
         </div>
 
-        <div class="p-4 rounded-xl bg-white border border-slate-200 space-y-2.5">
+        <div class="p-4 rounded-2xl bg-white border border-slate-200 space-y-2.5">
           <h5 class="text-xs font-extrabold uppercase tracking-wider text-slate-500">선택된 각 성분의 역할 및 복용 타이밍 요약</h5>
           <div class="divide-y divide-slate-100 text-xs">
             ${selectedIngs.map(ing => `
@@ -2370,7 +2675,7 @@
       const grid = document.getElementById('productCatalogGrid');
       if (filtered.length === 0) {
         grid.innerHTML = `
-          <div class="col-span-full bg-white rounded-2xl border border-slate-200 p-8 text-center space-y-2">
+          <div class="col-span-full bg-white rounded-3xl border border-slate-200 p-8 text-center space-y-2">
             <div class="text-3xl">💊</div>
             <h4 class="text-base font-bold text-slate-800">표시할 제품이 없습니다.</h4>
             <p class="text-xs text-slate-500">검색 조건을 초기화하거나 상비약장에 제품을 추가해 보세요.</p>
@@ -2385,23 +2690,14 @@
         const inChecker = ing && state.checkerSelectedIds.includes(ing.id);
 
         return `
-          <div class="bg-white rounded-2xl border border-slate-200 p-4 flex flex-col justify-between gap-3.5 shadow-xs card-hover">
+          <div class="bg-white rounded-3xl border border-slate-200 p-4 flex flex-col justify-between gap-3.5 shadow-2xs card-hover">
             <div class="space-y-3">
               ${renderProductVisualBox(prod)}
               <div class="flex flex-wrap items-center justify-between gap-1.5">
                 ${getOtcBadgeHtml(prod.otcClass)}
                 <span class="text-[11px] font-semibold text-slate-500">${prod.maker || 'NZ Pharmacy'}</span>
               </div>
-              <div>
-                <div class="text-xs font-bold text-teal-800">핵심 성분: ${prod.activeText}</div>
-                <p class="text-xs text-slate-600 mt-1 leading-relaxed">${prod.summary}</p>
-              </div>
-              ${ing ? `
-                <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 text-[11px] space-y-1">
-                  <div><strong class="text-slate-800">🔬 기전 요약:</strong> <span class="text-slate-600">${ing.drugClass.split(' (')[0]}</span></div>
-                  <div><strong class="text-emerald-800">✅ 시너지 병용:</strong> <span class="text-slate-600">${ing.synergyWith.map(s => getIngredientById(s.id)?.nameKo.split(' (')[0]).join(', ') || '단독/무난'}</span></div>
-                </div>
-              ` : ''}
+              <p class="text-xs text-slate-600 leading-relaxed">${prod.summary}</p>
             </div>
 
             <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
@@ -2409,7 +2705,7 @@
                 href="${prod.storeUrl || 'https://www.chemistwarehouse.co.nz'}"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-xs font-bold text-teal-700 hover:text-teal-900 hover:underline"
+                class="text-xs font-extrabold text-teal-700 hover:text-teal-900 hover:underline"
               >
                 🛒 ${prod.storeName || '약국 링크'} ↗
               </a>
@@ -2448,6 +2744,20 @@
     // ==================== SHARED EVENT DELEGATION FOR DYNAMIC BUTTONS ====================
     function attachDynamicCardListeners(rootEl) {
       if (!rootEl) return;
+
+      rootEl.querySelectorAll('.detail-toggle-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetId = btn.getAttribute('data-toggle-detail');
+          const detailBox = document.getElementById(targetId);
+          if (detailBox) {
+            const isHidden = detailBox.classList.contains('hidden');
+            detailBox.classList.toggle('hidden', !isHidden);
+            btn.innerHTML = isHidden
+              ? '<span>🔬 자세한 작용 기전 접기</span><span>▲</span>'
+              : '<span>🔬 자세한 작용 기전 및 병용 이유 펼치기</span><span>▼</span>';
+          }
+        });
+      });
 
       rootEl.querySelectorAll('.checker-toggle-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -2504,9 +2814,9 @@
       document.querySelectorAll('.nav-tab-btn').forEach(btn => {
         const isCurrent = btn.getAttribute('data-tab') === tabId;
         if (isCurrent) {
-          btn.className = 'nav-tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-1.5 bg-white text-teal-900 shadow-sm';
+          btn.className = 'nav-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center gap-1.5 bg-teal-700 text-white shadow-xs';
         } else {
-          btn.className = 'nav-tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-1.5 text-emerald-100 hover:bg-white/10';
+          btn.className = 'nav-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center gap-1.5 text-slate-600 hover:bg-slate-100';
         }
       });
       refreshAllViews();
@@ -2535,11 +2845,26 @@
 
       const symInput = document.getElementById('symptomSearchInput');
       const clearSymInputBtn = document.getElementById('clearSymptomInputBtn');
+      const analyzeBtn = document.getElementById('analyzeSentenceBtn');
+
       symInput.addEventListener('input', () => {
         state.symptomSearchQuery = symInput.value;
         clearSymInputBtn.classList.toggle('hidden', !symInput.value);
         renderSymptomResults();
       });
+
+      symInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          applyNaturalSentenceToSelection(symInput.value);
+        }
+      });
+
+      analyzeBtn.addEventListener('click', () => {
+        applyNaturalSentenceToSelection(symInput.value);
+        showToast('입력하신 문장에서 증상을 파악하여 맞춤 성분을 추천합니다.');
+      });
+
       clearSymInputBtn.addEventListener('click', () => {
         symInput.value = '';
         state.symptomSearchQuery = '';
@@ -2547,10 +2872,22 @@
         renderSymptomResults();
       });
 
+      // Sentence Examples One-click
+      document.querySelectorAll('.sentence-example-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const sentence = btn.getAttribute('data-sentence');
+          applyNaturalSentenceToSelection(sentence);
+          showToast('문장 증상 분석이 적용되었습니다.');
+        });
+      });
+
       document.querySelectorAll('.preset-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           const syms = btn.getAttribute('data-preset').split(',');
           state.selectedSymptoms = syms;
+          state.symptomSearchQuery = '';
+          symInput.value = '';
+          clearSymInputBtn.classList.add('hidden');
           state.bodyCategory = 'all';
           renderBodyCategories();
           renderSymptomChips();
@@ -2575,7 +2912,7 @@
           switchTab('checker');
           showToast('추천 상위 성분들을 병용 시너지/금기 체커로 불러왔습니다.');
         } else {
-          showToast('먼저 증상을 선택해 주세요.');
+          showToast('먼저 증상을 입력하거나 선택해 주세요.');
         }
       });
 
@@ -2682,7 +3019,6 @@
 
     window.addEventListener('DOMContentLoaded', initApp);
   </script>
-
   <script>
     if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
       window.addEventListener('load', function() {
